@@ -29,7 +29,7 @@
 
         <div
             class="relative z-10 w-full sm:max-w-md mt-6 px-6 py-4 bg-gray-100 dark:bg-gray-700 shadow-md overflow-hidden sm:rounded-lg"
-            style="background-color: rgba(90, 90, 90, 0.8);">
+            style="background-color: rgba(231, 231, 231, 0.8);">
             {{ $slot }}
         </div>
     </div>
