@@ -79,10 +79,11 @@
                 <div class="flex justify-around h-16 items-center">
                     <!-- Dashboard -->
                     <a class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                        href="{{ route('dashboard') }}">
-                        <i class="fas fa-home text-xl"></i>
-                        <span class="text-xs">Dashboard</span>
-                    </a>
+                        href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}">
+                            <i class="fas fa-home text-xl"></i>
+                            <span class="text-xs">Dashboard</span>
+                        </a>
+
                     <!-- Pengajuan Cuti -->
                     <a class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                         href="#">
@@ -122,7 +123,7 @@
             </div>
         </div>
     @endif
-    
+
 @endauth
 
 
