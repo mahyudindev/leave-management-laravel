@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('jenis_cuti', function (Blueprint $table) {
-            $table->string('id_cuti', 10)->primary();
+            $table->id();
             $table->string('nama_cuti', 50);
             $table->timestamps();
         });
@@ -20,4 +20,3 @@ return new class extends Migration
         Schema::dropIfExists('jenis_cuti');
     }
 };
-
