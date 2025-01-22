@@ -35,35 +35,68 @@ class DashboardController extends Controller
     }
 
     // Method untuk menyimpan pengajuan cuti
+    // public function ajukanCuti(Request $request)
+    // {
+    //     $request->validate([
+    //         'jenis_cuti' => 'required|exists:jenis_cuti,id',
+    //         'tanggal_awal' => 'required|date',
+    //         'tanggal_akhir' => 'required|date|after_or_equal:tanggal_awal',
+    //     ]);
+    
+    //     $tanggalAwal = Carbon::parse($request->tanggal_awal);
+    //     $tanggalAkhir = Carbon::parse($request->tanggal_akhir);
+    //     $jumlahHari = $tanggalAwal->diffInDays($tanggalAkhir) + 1;
+    
+    //     $user = Auth::user();
+    
+    //     if ($jumlahHari > $user->jumlah_cuti) {
+    //         return back()->with('error', 'Jumlah hari cuti melebihi sisa cuti Anda.');
+    //     }
+    
+    //     // Simpan data pengajuan cuti tanpa mengurangi jumlah cuti user
+    //     Cuti::create([
+    //         'id_user' => $user->id,
+    //         'jenis_cuti' => $request->jenis_cuti,
+    //         'tanggal_awal' => $tanggalAwal,
+    //         'tanggal_akhir' => $tanggalAkhir,
+    //         'jumlah' => $jumlahHari,
+    //         'status' => 'Pending',
+    //     ]);
+    
+    //     return redirect()->route('dashboard')->with('success', 'Pengajuan cuti berhasil dikirim dan berstatus Pending.');
+    // }
     public function ajukanCuti(Request $request)
-    {
-        $request->validate([
-            'jenis_cuti' => 'required|exists:jenis_cuti,id',
-            'tanggal_awal' => 'required|date',
-            'tanggal_akhir' => 'required|date|after_or_equal:tanggal_awal',
-        ]);
+{
+    $request->validate([
+        'jenis_cuti' => 'required|exists:jenis_cuti,id',
+        'tanggal_awal' => 'required|date',
+        'tanggal_akhir' => 'required|date|after_or_equal:tanggal_awal',
+    ]);
 
-        $tanggalAwal = Carbon::parse($request->tanggal_awal);
-        $tanggalAkhir = Carbon::parse($request->tanggal_akhir);
-        $jumlahHari = $tanggalAwal->diffInDays($tanggalAkhir) + 1;
+    $tanggalAwal = Carbon::parse($request->tanggal_awal);
+    $tanggalAkhir = Carbon::parse($request->tanggal_akhir);
+    $jumlahHari = $tanggalAwal->diffInDays($tanggalAkhir) + 1;
 
-        $user = Auth::user();
+    $user = Auth::user();
 
-        if ($jumlahHari > $user->jumlah_cuti) {
-            return back()->withErrors(['jumlah_cuti' => 'Jumlah hari cuti melebihi sisa cuti Anda.']);
-        }
-
-        Cuti::create([
-            'id_user' => $user->id,
-            'jenis_cuti' => $request->jenis_cuti,
-            'tanggal_awal' => $tanggalAwal,
-            'tanggal_akhir' => $tanggalAkhir,
-            'jumlah' => $jumlahHari,
-            'status' => 'Pending',
-        ]);
-
-        return redirect()->route('dashboard')->with('success', 'Pengajuan cuti berhasil dikirim dan berstatus Pending.');
+    if ($jumlahHari > $user->jumlah_cuti) {
+        return back()->with('error', 'Jumlah hari cuti melebihi sisa cuti Anda.');
     }
+
+    // Simpan data pengajuan cuti
+    Cuti::create([
+        'id_user' => $user->id,
+        'jenis_cuti' => $request->jenis_cuti,
+        'tanggal_awal' => $tanggalAwal,
+        'tanggal_akhir' => $tanggalAkhir,
+        'jumlah' => $jumlahHari,
+        'status' => 'Pending',
+    ]);
+
+    return redirect()->back()->with('success', 'Pengajuan cuti berhasil dikirim dan berstatus Pending.');
+}
+
+    
 
     public function riwayatCuti(Request $request)
 {
@@ -110,13 +143,17 @@ public function updateCuti(Request $request, $id)
             $cuti->status = 'Approved';
         }
     } elseif ($action === 'reject') {
-        $cuti->status = 'Rejected';
+        // Update status ke Rejected jika belum Rejected
+        if ($cuti->status !== 'Rejected') {
+            $cuti->status = 'Rejected';
+        }
     }
 
     $cuti->save();
 
     return redirect()->back()->with('success', "Cuti berhasil di-{$action}.");
 }
+
 
 
 }
