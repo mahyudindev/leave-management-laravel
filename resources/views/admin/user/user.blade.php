@@ -158,4 +158,27 @@
             });
         });
     </script>
+    <script>
+        // SweetAlert delete confirmation
+        document.querySelectorAll('.delete-user-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const userId = this.dataset.id;
+                Swal.fire({
+                    title: "Apakah Anda yakin?",
+                    text: "Data pengguna ini akan dihapus secara permanen!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ya, hapus!",
+                    cancelButtonText: "Batal",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById(`delete-user-form-${userId}`).submit();
+                    }
+                });
+            });
+        });
+    </script>
+    
 </x-app-layout>

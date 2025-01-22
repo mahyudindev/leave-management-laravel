@@ -108,15 +108,16 @@
                 </button>
                 <ul x-show="openDropdown === 'cuti'" x-cloak class="py-2 space-y-2">
                     <li>
-                        <a href="#" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Waiting Approval</a>
+                        <a href="{{ route('admin.cuti', 'Pending') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Waiting Approval</a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Approved</a>
+                        <a href="{{ route('admin.cuti', 'Approved') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Approved</a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Rejected</a>
+                        <a href="{{ route('admin.cuti', 'Rejected') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Rejected</a>
                     </li>
                 </ul>
+                
             </li>
         </ul>
     </div>

@@ -10,17 +10,13 @@ return new class extends Migration
     {
         Schema::create('cuti', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_user');
+            $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
             $table->date('tanggal_awal');
             $table->date('tanggal_akhir');
             $table->integer('jumlah');
-            $table->unsignedBigInteger('jenis_cuti');
-            $table->string('ket', 50);
-            $table->enum('status', ['Approved', 'Rejected', 'Pending']);
+            $table->foreignId('jenis_cuti')->constrained('jenis_cuti')->onDelete('cascade');
+            $table->enum('status', ['Approved', 'Rejected', 'Pending'])->default('Pending');
             $table->timestamps();
-
-            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
-            // $table->foreign('jenis_cuti')->references('id')->on('jenis_cuti')->onDelete('cascade');
         });
     }
 
@@ -29,4 +25,5 @@ return new class extends Migration
         Schema::dropIfExists('cuti');
     }
 };
+
 

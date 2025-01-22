@@ -11,9 +11,7 @@ class Cuti extends Model
 
     protected $table = 'cuti';
 
-
     protected $primaryKey = 'id';
-
 
     protected $fillable = [
         'id_user',
@@ -21,7 +19,6 @@ class Cuti extends Model
         'tanggal_akhir',
         'jumlah',
         'jenis_cuti',
-        'ket',
         'status',
     ];
 
@@ -43,21 +40,35 @@ class Cuti extends Model
         return self::where('status', $status)->get();
     }
 
-    // Pengajuan cuti: Kurangi jumlah cuti di User
-    public function applyCuti($jumlahCuti)
+    // Mengurangi jumlah cuti user saat pengajuan
+    public static function applyCuti($userId, $jenisCutiId, $tanggalAwal, $tanggalAkhir)
     {
-        $user = $this->user; // Relasi ke User
-        if ($user->jumlah_cuti >= $jumlahCuti) {
-            $user->jumlah_cuti -= $jumlahCuti;
-            $user->save();
+        $user = User::find($userId);
 
-            $this->jumlah = $jumlahCuti;
-            $this->status = 'Pending';
-            $this->save();
-
-            return true; // Berhasil
+        if (!$user) {
+            return ['success' => false, 'message' => 'User tidak ditemukan'];
         }
 
-        return false; // Gagal, jumlah cuti tidak cukup
+        $jumlahHari = (new \Carbon\Carbon($tanggalAwal))->diffInDays(new \Carbon\Carbon($tanggalAkhir)) + 1;
+
+        if ($user->jumlah_cuti >= $jumlahHari) {
+            // Kurangi jumlah cuti user
+            $user->jumlah_cuti -= $jumlahHari;
+            $user->save();
+
+            // Simpan pengajuan cuti
+            self::create([
+                'id_user' => $userId,
+                'jenis_cuti' => $jenisCutiId,
+                'tanggal_awal' => $tanggalAwal,
+                'tanggal_akhir' => $tanggalAkhir,
+                'jumlah' => $jumlahHari,
+                'status' => 'Pending',
+            ]);
+
+            return ['success' => true, 'message' => 'Pengajuan cuti berhasil'];
+        }
+
+        return ['success' => false, 'message' => 'Jumlah hari cuti tidak mencukupi'];
     }
 }

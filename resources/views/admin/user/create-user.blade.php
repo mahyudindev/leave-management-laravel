@@ -36,7 +36,7 @@
                 </div>
 
                 <!-- Password -->
-                <div class="mb-4">
+                {{-- <div class="mb-4">
                     <label for="password" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Password:</label>
                     <input type="password" name="password" id="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-500 @enderror">
                     @error('password')
@@ -48,7 +48,37 @@
                 <div class="mb-4">
                     <label for="password_confirmation" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Konfirmasi Password:</label>
                     <input type="password" name="password_confirmation" id="password_confirmation" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div> --}}
+                <div class="mb-4">
+                    <label for="password" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Password:</label>
+                    <div class="relative">
+                        <input type="password" name="password" id="password" 
+                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-500 @enderror">
+                        <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer" onclick="togglePasswordVisibility('password', this)">
+                            <svg class="w-6 h-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="password-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825a10.05 10.05 0 01-1.875.175c-4.67 0-8.43-3.358-10-8.005 1.57-4.647 5.33-8.005 10-8.005 1.14 0 2.241.198 3.283.555M15 12a3 3 0 11-6 0 3 3 0 016 0zm3.238 3.238a8.977 8.977 0 002.205-3.23 10.042 10.042 0 00-1.403-2.137m-2.244-1.607a8.943 8.943 0 00-2.962-2.648" />
+                            </svg>
+                        </span>
+                    </div>
+                    @error('password')
+                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
+                    @enderror
                 </div>
+                
+                <!-- Konfirmasi Password -->
+                <div class="mb-4">
+                    <label for="password_confirmation" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Konfirmasi Password:</label>
+                    <div class="relative">
+                        <input type="password" name="password_confirmation" id="password_confirmation" 
+                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer" onclick="togglePasswordVisibility('password_confirmation', this)">
+                            <svg class="w-6 h-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="password-confirmation-icon">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825a10.05 10.05 0 01-1.875.175c-4.67 0-8.43-3.358-10-8.005 1.57-4.647 5.33-8.005 10-8.005 1.14 0 2.241.198 3.283.555M15 12a3 3 0 11-6 0 3 3 0 016 0zm3.238 3.238a8.977 8.977 0 002.205-3.23 10.042 10.042 0 00-1.403-2.137m-2.244-1.607a8.943 8.943 0 00-2.962-2.648" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
                 <div class="mb-4">
                     <label for="tanggal_masuk" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Tanggal Masuk:</label>
                     <input type="date" name="tanggal_masuk" id="tanggal_masuk" value="{{ old('tanggal_masuk') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('tanggal_masuk') border-red-500 @enderror">
@@ -119,4 +149,18 @@
             </form>
         </div>
     </div>
+    <script>
+        function togglePasswordVisibility(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            const icon = iconElement.querySelector('svg');
+    
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm1.707-6.707A10.034 10.034 0 0113.875 4.175 10.05 10.05 0 0112 4c-4.67 0-8.43 3.358-10 8.005 1.57 4.647 5.33 8.005 10 8.005a9.989 9.989 0 007.32-3.072l.157-.157M17 12h.01" />';
+            } else {
+                input.type = 'password';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825a10.05 10.05 0 01-1.875.175c-4.67 0-8.43-3.358-10-8.005 1.57-4.647 5.33-8.005 10-8.005 1.14 0 2.241.198 3.283.555M15 12a3 3 0 11-6 0 3 3 0 016 0zm3.238 3.238a8.977 8.977 0 002.205-3.23 10.042 10.042 0 00-1.403-2.137m-2.244-1.607a8.943 8.943 0 00-2.962-2.648" />';
+            }
+        }
+    </script>
 </x-app-layout>

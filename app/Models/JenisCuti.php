@@ -9,13 +9,13 @@ class JenisCuti extends Model
 {
     use HasFactory;
 
-    // Nama tabel (default: 'jenis_cuti', tidak diubah)
+    // Nama tabel
     protected $table = 'jenis_cuti';
 
-    // Primary key (default: 'id', tidak diubah)
+    // Primary key
     protected $primaryKey = 'id';
 
-    // Atribut yang dapat diisi (fillable)
+    // Atribut yang dapat diisi
     protected $fillable = [
         'nama_cuti',
     ];

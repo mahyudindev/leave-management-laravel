@@ -86,14 +86,14 @@
 
                     <!-- Pengajuan Cuti -->
                     <a class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                        href="#">
+                        href="{{ route('cuti.pengajuan') }}">
                         <i class="fas fa-calendar-alt text-xl"></i>
                         <span class="text-xs">Pengajuan Cuti</span>
                     </a>
 
                     <!-- History -->
                     <a class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                        href="{{ route('history') }}">
+                        href="{{ route('cuti.riwayat') }}">
                         <i class="fas fa-history text-xl"></i>
                         <span class="text-xs">History</span>
                     </a>

@@ -66,8 +66,14 @@ class User extends Authenticatable
 
 
 
+    // public function cuti()
+    // {
+    //     return $this->hasMany(Cuti::class, 'id_user', 'id');
+    // }
+
     public function cuti()
-    {
-        return $this->hasMany(Cuti::class, 'id_user', 'id');
-    }
+{
+    return $this->hasMany(Cuti::class, 'id_user', 'id');
+}
+
 }

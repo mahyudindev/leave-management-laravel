@@ -1,5 +1,4 @@
 <x-app-layout>
-    <x-admin-sidebar />
     
     {{-- Main Dashboard Content --}}
     <div x-data="{ collapsed: false }" 

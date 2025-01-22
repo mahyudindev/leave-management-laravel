@@ -13,130 +13,131 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-
     public function index(Request $request)
-{
-    $users = DB::table('users')
-        ->select('users.*', 'departemen.nama as departemen_nama', 'jabatan.nama as jabatan_nama')
-        ->leftJoin('departemen', 'users.departemen_id', '=', 'departemen.id')
-        ->leftJoin('jabatan', 'users.jabatan_id', '=', 'jabatan.id')
-        ->when($request->input('nama'), function ($query, $nama) {
-            $query->where('users.nama', 'like', '%' . $nama . '%');
-        })
-        ->paginate(10);
+    {
+        $users = DB::table('users')
+            ->select('users.*', 'departemen.nama as departemen_nama', 'jabatan.nama as jabatan_nama')
+            ->leftJoin('departemen', 'users.departemen_id', '=', 'departemen.id')
+            ->leftJoin('jabatan', 'users.jabatan_id', '=', 'jabatan.id')
+            ->when($request->input('nama'), function ($query, $nama) {
+                $query->where('users.name', 'like', '%' . $nama . '%');
+            })
+            ->paginate(10);
 
-        // dd(get_object_vars($users->items()[0]));
-
-
-    return view('admin.user.user', compact('users'));
-}
-
-    
-
-
-public function destroy($id)
-{
-    $user = DB::table('users')->where('id', $id)->first();
-
-    if (!$user) {
-        return redirect()->route('admin.user.index')->with('error', 'User not found');
+        return view('admin.user.user', compact('users'));
     }
 
-    DB::table('users')->where('id', $id)->delete();
+    public function destroy($id)
+    {
+        $user = DB::table('users')->where('id', $id)->first();
 
-    return redirect()->route('admin.user.index')->with('success', 'User deleted successfully');
-}
+        if (!$user) {
+            return redirect()->route('admin.user.index')->with('error', 'User not found');
+        }
 
-public function edit($id)
-{
-    $user = DB::table('users')
-        ->select('users.*', 'departemen.nama as departemen_nama', 'jabatan.nama as jabatan_nama')
-        ->leftJoin('departemen', 'users.departemen_id', '=', 'departemen.id')
-        ->leftJoin('jabatan', 'users.jabatan_id', '=', 'jabatan.id')
-        ->where('users.id', $id)
-        ->first();
+        DB::table('users')->where('id', $id)->delete();
 
-    if (!$user) {
-        return redirect()->route('admin.user.index')->with('error', 'User not found');
+        return redirect()->route('admin.user.index')->with('success', 'User deleted successfully');
     }
 
-    $departemen = DB::table('departemen')->get();
-    $jabatan = DB::table('jabatan')->get();
+    public function edit($id)
+    {
+        $user = DB::table('users')
+            ->select('users.*', 'departemen.nama as departemen_nama', 'jabatan.nama as jabatan_nama')
+            ->leftJoin('departemen', 'users.departemen_id', '=', 'departemen.id')
+            ->leftJoin('jabatan', 'users.jabatan_id', '=', 'jabatan.id')
+            ->where('users.id', $id)
+            ->first();
 
-    return view('admin.user.edit-user', compact('user', 'departemen', 'jabatan'));
-}
+        if (!$user) {
+            return redirect()->route('admin.user.index')->with('error', 'User not found');
+        }
 
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $id,
-        'jumlah_cuti' => 'required|integer|min:0',
-        'departemen_id' => 'nullable|exists:departemen,id',
-        'jabatan_id' => 'nullable|exists:jabatan,id',
-        'role' => 'required|in:user,admin',
-    ]);
+        $departemen = DB::table('departemen')->get();
+        $jabatan = DB::table('jabatan')->get();
 
-    $user = DB::table('users')->where('id', $id)->first();
-
-    if (!$user) {
-        return redirect()->route('admin.user.index')->with('error', 'User not found');
+        return view('admin.user.edit-user', compact('user', 'departemen', 'jabatan'));
     }
 
-    DB::table('users')->where('id', $id)->update([
-        'name' => $request->name,
-        'email' => $request->email,
-        'jumlah_cuti' => $request->jumlah_cuti,
-        'departemen_id' => $request->departemen_id,
-        'jabatan_id' => $request->jabatan_id,
-        'role' => $request->role,
-        'updated_at' => now(),
-    ]);
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|confirmed|min:8',
+            'jumlah_cuti' => 'required|integer|min:0',
+            'departemen_id' => 'nullable|exists:departemen,id',
+            'jabatan_id' => 'nullable|exists:jabatan,id',
+            'role' => 'required|in:user,admin',
+        ]);
 
-    return redirect()->route('admin.user.index')->with('success', 'User updated successfully');
-}
+        $user = DB::table('users')->where('id', $id)->first();
 
-public function create()
-{
-    $departemen = DB::table('departemen')->get();
-    $jabatan = DB::table('jabatan')->get();
+        if (!$user) {
+            return redirect()->route('admin.user.index')->with('error', 'User not found');
+        }
 
-    return view('admin.user.create-user', compact('departemen', 'jabatan'));
-}
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'jumlah_cuti' => $request->jumlah_cuti,
+            'departemen_id' => $request->departemen_id,
+            'jabatan_id' => $request->jabatan_id,
+            'role' => $request->role,
+            'updated_at' => now(),
+        ];
 
-public function store(Request $request)
-{
-    $request->validate([
-        'nik' => 'required|string|max:20|unique:users,nik', 
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|string|confirmed|min:8',
-        'role' => 'required|in:user,admin',
-        'tanggal_masuk' => 'required|date',
-        'jumlah_cuti' => 'required|integer|min:0',
-        'departemen_id' => 'nullable|exists:departemen,id',
-        'jabatan_id' => 'nullable|exists:jabatan,id',
-    ]);
+        // Jika password diisi, tambahkan ke data yang akan diupdate
+        if (!empty($request->password)) {
+            $data['password'] = Hash::make($request->password);
+        }
 
-    DB::table('users')->insert([
-        'nik' => $request->nik,
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role' => $request->role,
-        'tanggal_masuk' => $request->tanggal_masuk,
-        'jumlah_cuti' => $request->jumlah_cuti,
-        'departemen_id' => $request->departemen_id,
-        'jabatan_id' => $request->jabatan_id,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
+        DB::table('users')->where('id', $id)->update($data);
 
-    return redirect()->route('admin.user.index')->with('success', 'User created successfully');
-}
+        return redirect()->route('admin.user.index')->with('success', 'User updated successfully');
+    }
 
-public function export()
-{
-    return Excel::download(new UsersExport, 'data_karyawan.xlsx');
-}
+    public function create()
+    {
+        $departemen = DB::table('departemen')->get();
+        $jabatan = DB::table('jabatan')->get();
+
+        return view('admin.user.create-user', compact('departemen', 'jabatan'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nik' => 'required|string|max:20|unique:users,nik',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|confirmed|min:8',
+            'role' => 'required|in:user,admin',
+            'tanggal_masuk' => 'required|date',
+            'jumlah_cuti' => 'required|integer|min:0',
+            'departemen_id' => 'nullable|exists:departemen,id',
+            'jabatan_id' => 'nullable|exists:jabatan,id',
+        ]);
+
+        DB::table('users')->insert([
+            'nik' => $request->nik,
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'tanggal_masuk' => $request->tanggal_masuk,
+            'jumlah_cuti' => $request->jumlah_cuti,
+            'departemen_id' => $request->departemen_id,
+            'jabatan_id' => $request->jabatan_id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('admin.user.index')->with('success', 'User created successfully');
+    }
+
+    public function export()
+    {
+        return Excel::download(new UsersExport, 'data_karyawan.xlsx');
+    }
 }

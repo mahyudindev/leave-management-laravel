@@ -1,6 +1,32 @@
 <x-app-layout>
     <x-admin-sidebar />
 
+    @if (session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    title: "{{ session('success') }}",
+                    icon: "success",
+                    timer: 2500,
+                    timerProgressBar: true,
+                });
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    title: "{{ session('error') }}",
+                    icon: "error",
+                    timer: 2500,
+                    timerProgressBar: true,
+                });
+            });
+        </script>
+    @endif
+
     <div class="p-4 sm:ml-64">
         <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-bold text-black dark:text-white">Daftar Jabatan</h1>
@@ -23,7 +49,7 @@
                             <td class="px-6 py-4">{{ $job->nama }}</td>
                             <td class="px-6 py-4 flex space-x-4">
                                 <a href="{{ route('admin.jabatan.edit', $job->id) }}" class="text-blue-500 hover:underline">Edit</a>
-                                <form action="{{ route('admin.jabatan.destroy', $job->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus jabatan ini?')">
+                                <form action="{{ route('admin.jabatan.destroy', $job->id) }}" method="POST" onsubmit="return confirmDelete(event)">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-500 hover:underline">Hapus</button>
@@ -39,4 +65,28 @@
             {{ $jabatan->links() }}
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // SweetAlert delete confirmation
+        function confirmDelete(event) {
+            event.preventDefault(); // Mencegah form langsung dikirim
+            const form = event.target;
+
+            Swal.fire({
+                title: "Apakah Anda yakin?",
+                text: "Data ini akan dihapus secara permanen!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, hapus!",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit form jika user konfirmasi
+                }
+            });
+        }
+    </script>
 </x-app-layout>
