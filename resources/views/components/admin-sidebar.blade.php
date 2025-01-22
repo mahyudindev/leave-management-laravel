@@ -116,6 +116,13 @@
                     <li>
                         <a href="{{ route('admin.cuti', 'Rejected') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Rejected</a>
                     </li>
+                    <li>
+                        <a href="{{ route('admin.laporan.cuti') }}" 
+                           class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                            Laporan Cuti
+                        </a>
+                    </li>
+                    
                 </ul>
                 
             </li>

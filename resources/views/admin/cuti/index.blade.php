@@ -56,16 +56,40 @@
                             <td class="px-6 py-4">{{ $cuti->jumlah }} Hari</td>
                             <td class="px-6 py-4">
                                 @if ($status === 'Pending')
-                                    <form action="{{ route('admin.cuti.update', $cuti->id) }}" method="POST" class="inline">
+                                    <form action="{{ route('admin.cuti.update', $cuti->id) }}" method="POST" id="cutiForm">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" name="action" value="approve" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-700">Approve</button>
-                                        <button type="submit" name="action" value="reject" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 ml-2">Reject</button>
+                            
+                                        <div class="flex space-x-2">
+                                            <!-- Approve Button -->
+                                            <button type="button" onclick="handleApprove()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-700">Approve</button>
+                            
+                                            <!-- Reject Button -->
+                                            <div x-data="{ open: false }">
+                                                <button type="button" @click="open = true" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700">Reject</button>
+                            
+                                                <!-- Modal -->
+                                                <div x-show="open" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
+                                                    <div class="bg-white rounded-lg shadow-xl w-1/3 p-6">
+                                                        <h3 class="text-lg font-medium text-gray-900">Catatan Penolakan</h3>
+                                                        <textarea name="notes" id="notes" class="form-input mt-4 block w-full rounded-md border-gray-300 shadow-sm focus:ring focus:ring-opacity-50 text-sm" placeholder="Masukkan catatan penolakan"></textarea>
+                                                        <div class="flex justify-end mt-4 space-x-2">
+                                                            <button type="button" @click="open = false" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400">Cancel</button>
+                                                            <button type="button" onclick="submitReject()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700">Submit</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                            
+                                        <!-- Hidden Input -->
+                                        <input type="hidden" name="action" id="action">
                                     </form>
                                 @else
                                     <span class="px-3 py-1 text-white rounded-full {{ $status == 'Approved' ? 'bg-green-500' : 'bg-red-500' }}">{{ $status }}</span>
                                 @endif
                             </td>
+                            
                         </tr>
                     @empty
                         <tr>
@@ -82,4 +106,25 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function handleApprove() {
+            document.getElementById('action').value = 'approve';
+            document.getElementById('cutiForm').submit();
+        }
+
+        function submitReject() {
+            const notes = document.getElementById('notes').value.trim();
+            if (!notes) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Catatan harus diisi untuk menolak pengajuan!',
+                });
+                return;
+            }
+
+            document.getElementById('action').value = 'reject';
+            document.getElementById('cutiForm').submit();
+        }
+    </script>
 </x-app-layout>

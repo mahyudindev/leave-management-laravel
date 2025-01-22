@@ -55,8 +55,8 @@
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden space-x-4">
                 <!-- Teks Hello -->
-                <div :class="{'text-black': !darkMode, 'text-white': darkMode}">
-                    Hello!! {{ Auth::user()->name }}
+                <div :class="{'text-black dark:text-white font-bold': true}">
+                    Hello {{ Auth::user()->name }}
                 </div>
                 <!-- Tombol Dark/Light Mode -->
                 <button @click="darkMode = !darkMode; toggleTheme()"

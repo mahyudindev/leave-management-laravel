@@ -81,6 +81,7 @@ use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\JenisCutiController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LaporanCutiController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -138,5 +139,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 });
 
 Route::patch('/admin/cuti/{id}', [DashboardController::class, 'updateCuti'])->name('admin.cuti.update');
+
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/laporan-cuti', [LaporanCutiController::class, 'index'])->name('admin.laporan.cuti');
+    Route::get('/admin/laporan-cuti/export', [LaporanCutiController::class, 'export'])->name('admin.laporan.cuti.export');
+});
 
 require __DIR__ . '/auth.php';

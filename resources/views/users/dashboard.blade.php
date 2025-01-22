@@ -22,7 +22,7 @@
                 <!-- Total Terpakai -->
                 <div class="bg-red-100 dark:bg-red-900 rounded-lg p-4">
                     <h3 class="text-lg font-semibold text-red-800 dark:text-red-300">Total Terpakai</h3>
-                    <p class="text-2xl font-bold text-red-900 dark:text-red-200">5 Hari</p>
+                    <p class="text-2xl font-bold text-red-900 dark:text-red-200">{{ $totalTerpakai ?? '0' }} Hari</p>
                 </div>
                 </div>
             </div>

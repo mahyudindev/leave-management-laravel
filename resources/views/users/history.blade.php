@@ -22,6 +22,8 @@
                                 <th scope="col" class="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase dark:text-gray-400">Durasi</th>
                                 <!-- Status -->
                                 <th scope="col" class="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase dark:text-gray-400">Status</th>
+                                <!-- Catatan -->
+                                <th scope="col" class="px-6 py-3 text-left text-sm font-bold text-gray-500 uppercase dark:text-gray-400">Catatan</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
@@ -37,10 +39,13 @@
                                             {{ $cuti->status }}
                                         </div>
                                     </td>
+                                    <td class="px-6 py-4 text-sm font-bold text-gray-900 dark:text-gray-100">
+                                        {{ $cuti->notes ?? '-' }}
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">Belum ada riwayat cuti.</td>
+                                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">Belum ada riwayat cuti.</td>
                                 </tr>
                             @endforelse
                         </tbody>
