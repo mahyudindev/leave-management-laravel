@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cuti', function (Blueprint $table) {
-            $table->string('kode', 10)->primary();
+            $table->id();
             $table->unsignedBigInteger('id_user');
             $table->date('tanggal_awal');
             $table->date('tanggal_akhir');

@@ -3,24 +3,16 @@
 
     <div class="p-4 sm:ml-64">
         <div class="bg-white dark:bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <h1 class="text-2xl font-bold text-center text-black dark:text-white mb-6">Tambah Data Karyawan</h1>
+            <h1 class="text-2xl font-bold text-center text-black dark:text-white mb-6">Edit Data Karyawan</h1>
 
-            <form action="{{ route('admin.user.store') }}" method="POST">
+            <form action="{{ route('admin.user.update', $user->id) }}" method="POST">
                 @csrf
-                <div class="mb-4">
-                    <label for="nik" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">NIK:</label>
-                    <input type="text" name="nik" id="nik" value="{{ old('nik') }}" 
-                           maxlength="10" 
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('nik') border-red-500 @enderror">
-                    @error('nik')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
-                
+                @method('PUT')
+
                 <!-- Nama -->
                 <div class="mb-4">
                     <label for="name" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Nama:</label>
-                    <input type="text" name="name" id="name" value="{{ old('name') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-500 @enderror">
+                    <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-500 @enderror">
                     @error('name')
                         <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
                     @enderror
@@ -29,37 +21,16 @@
                 <!-- Email -->
                 <div class="mb-4">
                     <label for="email" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Email:</label>
-                    <input type="email" name="email" id="email" value="{{ old('email') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-500 @enderror">
+                    <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-500 @enderror">
                     @error('email')
                         <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
 
-                <!-- Password -->
-                <div class="mb-4">
-                    <label for="password" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Password:</label>
-                    <input type="password" name="password" id="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-500 @enderror">
-                    @error('password')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <!-- Konfirmasi Password -->
-                <div class="mb-4">
-                    <label for="password_confirmation" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Konfirmasi Password:</label>
-                    <input type="password" name="password_confirmation" id="password_confirmation" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="mb-4">
-                    <label for="tanggal_masuk" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Tanggal Masuk:</label>
-                    <input type="date" name="tanggal_masuk" id="tanggal_masuk" value="{{ old('tanggal_masuk') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('tanggal_masuk') border-red-500 @enderror">
-                    @error('tanggal_masuk')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
                 <!-- Jumlah Cuti -->
                 <div class="mb-4">
                     <label for="jumlah_cuti" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Jumlah Cuti:</label>
-                    <input type="number" name="jumlah_cuti" id="jumlah_cuti" value="{{ old('jumlah_cuti') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('jumlah_cuti') border-red-500 @enderror">
+                    <input type="number" name="jumlah_cuti" id="jumlah_cuti" value="{{ old('jumlah_cuti', $user->jumlah_cuti) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('jumlah_cuti') border-red-500 @enderror">
                     @error('jumlah_cuti')
                         <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
                     @enderror
@@ -71,7 +42,7 @@
                     <select name="departemen_id" id="departemen_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('departemen_id') border-red-500 @enderror">
                         <option value="">Pilih Departemen</option>
                         @foreach ($departemen as $dept)
-                            <option value="{{ $dept->id }}" {{ old('departemen_id') == $dept->id ? 'selected' : '' }}>
+                            <option value="{{ $dept->id }}" {{ old('departemen_id', $user->departemen_id) == $dept->id ? 'selected' : '' }}>
                                 {{ $dept->nama }}
                             </option>
                         @endforeach
@@ -87,7 +58,7 @@
                     <select name="jabatan_id" id="jabatan_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('jabatan_id') border-red-500 @enderror">
                         <option value="">Pilih Jabatan</option>
                         @foreach ($jabatan as $job)
-                            <option value="{{ $job->id }}" {{ old('jabatan_id') == $job->id ? 'selected' : '' }}>
+                            <option value="{{ $job->id }}" {{ old('jabatan_id', $user->jabatan_id) == $job->id ? 'selected' : '' }}>
                                 {{ $job->nama }}
                             </option>
                         @endforeach
@@ -101,8 +72,8 @@
                 <div class="mb-4">
                     <label for="role" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Role:</label>
                     <select name="role" id="role" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('role') border-red-500 @enderror">
-                        <option value="user" {{ old('role') === 'user' ? 'selected' : '' }}>User</option>
-                        <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="user" {{ old('role', $user->role) === 'user' ? 'selected' : '' }}>User</option>
+                        <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
                     </select>
                     @error('role')
                         <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>

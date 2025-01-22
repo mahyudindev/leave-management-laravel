@@ -26,10 +26,10 @@
                 </button>
                 <ul x-show="openDropdown === 'karyawan'" x-cloak class="py-2 space-y-2">
                     <li>
-                        <a href="#" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Data Karyawan</a>
+                        <a href="{{ route('admin.user.index') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Data Karyawan</a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Tambah Karyawan</a>
+                        <a href="{{ route('admin.user.create') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Tambah Karyawan</a>
                     </li>
                 </ul>
             </li>

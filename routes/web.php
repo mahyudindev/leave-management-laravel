@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,3 +35,15 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('admin.user.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('admin.user.create');
+    Route::post('/users', [UserController::class, 'store'])->name('admin.user.store');
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('admin.user.edit');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('admin.user.update');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
+});
+
+Route::get('/admin/users/export', [UserController::class, 'export'])->name('admin.users.export');
