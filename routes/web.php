@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DepartemenController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -47,3 +48,7 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::get('/admin/users/export', [UserController::class, 'export'])->name('admin.users.export');
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('departemen', DepartemenController::class);
+});
