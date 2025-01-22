@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DepartemenController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\JenisCutiController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -55,4 +56,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('jabatan', JabatanController::class);
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('jenis_cuti', JenisCutiController::class);
 });
