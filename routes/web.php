@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DepartemenController;
+use App\Http\Controllers\JabatanController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -51,4 +52,7 @@ Route::get('/admin/users/export', [UserController::class, 'export'])->name('admi
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('departemen', DepartemenController::class);
+});
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('jabatan', JabatanController::class);
 });

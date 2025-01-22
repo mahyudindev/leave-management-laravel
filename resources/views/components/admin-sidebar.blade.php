@@ -68,10 +68,10 @@
                 </button>
                 <ul x-show="openDropdown === 'jabatan'" x-cloak class="py-2 space-y-2">
                     <li>
-                        <a href="#" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Data Jabatan</a>
+                        <a href="{{ route('admin.jabatan.index') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Data Jabatan</a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Tambah Jabatan</a>
+                        <a href="{{ route('admin.jabatan.create') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Tambah Jabatan</a>
                     </li>
                 </ul>
             </li>
