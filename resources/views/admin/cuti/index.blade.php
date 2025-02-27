@@ -107,24 +107,55 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function handleApprove() {
-            document.getElementById('action').value = 'approve';
-            document.getElementById('cutiForm').submit();
-        }
+        // function handleApprove() {
+        //     document.getElementById('action').value = 'approve';
+        //     document.getElementById('cutiForm').submit();
+        // }
 
+        // function submitReject() {
+        //     const notes = document.getElementById('notes').value.trim();
+        //     if (!notes) {
+        //         Swal.fire({
+        //             icon: 'error',
+        //             title: 'Oops...',
+        //             text: 'Catatan harus diisi untuk menolak pengajuan!',
+        //         });
+        //         return;
+        //     }
+
+        //     document.getElementById('action').value = 'reject';
+        //     document.getElementById('cutiForm').submit();
+        // }
         function submitReject() {
-            const notes = document.getElementById('notes').value.trim();
-            if (!notes) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Catatan harus diisi untuk menolak pengajuan!',
-                });
-                return;
-            }
+    // Pilih modal yang sedang aktif berdasarkan atribut x-show
+    const modal = document.querySelector('div[x-show="open"]');
+    // Pastikan modal ditemukan
+    if (!modal) {
+        console.error("Modal tidak ditemukan");
+        return;
+    }
 
-            document.getElementById('action').value = 'reject';
-            document.getElementById('cutiForm').submit();
-        }
+    // Ambil textarea dari modal tersebut
+    const notesElement = modal.querySelector('#notes');
+    if (!notesElement) {
+        console.error("Textarea tidak ditemukan di dalam modal");
+        return;
+    }
+
+    const notes = notesElement.value.trim();
+
+    if (!notes) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Catatan harus diisi untuk menolak pengajuan!',
+        });
+        return;
+    }
+
+    document.getElementById('action').value = 'reject';
+    document.getElementById('cutiForm').submit();
+}
+
     </script>
 </x-app-layout>
