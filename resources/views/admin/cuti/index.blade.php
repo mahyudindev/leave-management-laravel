@@ -107,10 +107,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // function handleApprove() {
-        //     document.getElementById('action').value = 'approve';
-        //     document.getElementById('cutiForm').submit();
-        // }
+        function handleApprove() {
+            document.getElementById('action').value = 'approve';
+            document.getElementById('cutiForm').submit();
+        }
 
         // function submitReject() {
         //     const notes = document.getElementById('notes').value.trim();
