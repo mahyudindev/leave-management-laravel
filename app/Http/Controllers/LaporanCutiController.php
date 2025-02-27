@@ -15,8 +15,8 @@ class LaporanCutiController extends Controller
 
         $laporan = Cuti::with('user') // Relasi ke tabel user
             ->where('status', 'Approved')
-            ->whereYear('created_at', date('Y', strtotime($bulan)))
-            ->whereMonth('created_at', date('m', strtotime($bulan)))
+            ->whereYear('tanggal_awal', date('Y', strtotime($bulan)))
+            ->whereMonth('tanggal_awal', date('m', strtotime($bulan)))
             ->get();
 
         return view('admin.laporan-cuti', compact('laporan', 'bulan'));

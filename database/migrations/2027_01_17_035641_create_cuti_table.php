@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('jumlah');
             $table->foreignId('jenis_cuti')->constrained('jenis_cuti')->onDelete('cascade');
             $table->enum('status', ['Approved', 'Rejected', 'Pending'])->default('Pending');
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
