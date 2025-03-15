@@ -51,6 +51,10 @@ class DashboardController extends Controller
             return back()->with('error', 'Jumlah hari cuti melebihi sisa cuti Anda.');
         }
 
+        // Kurangi jumlah cuti saat pengajuan
+        $user->jumlah_cuti -= $jumlahHari;
+        $user->save();
+
         Cuti::create([
             'id_user' => $user->id,
             'jenis_cuti' => $request->jenis_cuti,
@@ -100,16 +104,19 @@ class DashboardController extends Controller
             return redirect()->back()->with('error', 'Catatan harus diisi jika pengajuan ditolak.');
         }
 
-        if ($action === 'approve') {
-            if ($cuti->status !== 'Approved') {
-                $user = $cuti->user;
-                $user->jumlah_cuti -= $cuti->jumlah;
-                $user->save();
+        $user = $cuti->user;
 
+        if ($action === 'approve') {
+            if ($cuti->status === 'Pending') {
                 $cuti->status = 'Approved';
                 $cuti->notes = null;
             }
         } elseif ($action === 'reject') {
+            if ($cuti->status === 'Pending') {
+                // Kembalikan jumlah cuti jika ditolak
+                $user->jumlah_cuti += $cuti->jumlah;
+                $user->save();
+            }
             $cuti->status = 'Rejected';
             $cuti->notes = $notes;
         }
