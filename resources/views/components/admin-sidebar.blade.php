@@ -60,7 +60,7 @@
             <li>
                 <button @click="openDropdown = openDropdown === 'jabatan' ? null : 'jabatan'" type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                     <svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M5 3a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5Zm0 12a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H5Zm12 0a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-2Zm0-12a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2Z"/>
+                        <path d="M5 13.17a3.001 3.001 0 0 0 0 5.66V20a1 1 0 1 0 2 0v-1.17a3.001 3.001 0 0 0 0-5.66V4a1 1 0 0 0-2 0v9.17Zm0 12a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H5Zm12 0a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-2Zm0-12a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2Z"/>
                     </svg>
                     <span class="flex-1 ms-3 text-left whitespace-nowrap">Jabatan</span>
                     <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -79,7 +79,7 @@
             <li>
                 <button @click="openDropdown = openDropdown === 'books' ? null : 'books'" type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                     <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M5 13.17a3.001 3.001 0 0 0 0 5.66V20a1 1 0 1 0 2 0v-1.17a3.001 3.001 0 0 0 0-5.66V4a1 1 0 0 0-2 0v9.17ZM11 20v-9.17a3.001 3.001 0 0 1 0-5.66V4a1 1 0 1 1 2 0v1.17a3.001 3.001 0 0 1 0 5.66V20a1 1 0 1 1-2 0Zm6-1.17V20a1 1 0 1 0 2 0v-1.17a3.001 3.001 0 0 0 0-5.66V4a1 1 0 1 0-2 0v9.17a3.001 3.001 0 0 0 0 5.66Z"/>
+                        <path d="M5 13.17a3.001 3.001 0 0 0 0 5.66V20a1 1 0 1 0 2 0v-1.17a3.001 3.001 0 0 0 0-5.66V4a1 1 0 0 0-2 0v9.17Zm0 12a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H5Zm12 0a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-2Zm0-12a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2Z"/>
                       </svg>
                     <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Variabel Cuti</span>
                     <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -109,15 +109,27 @@
                     </svg>
                 </button>
                 <ul x-show="openDropdown === 'cuti'" x-cloak class="py-2 space-y-2">
+                    {{-- <li>
+                        <a href="{{ route('admin.cuti.index') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Semua Cuti</a>
+                    </li> --}}
                     <li>
-                        <a href="{{ route('admin.cuti', 'Pending') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Waiting Approval</a>
+                        <a href="{{ route('admin.cuti.status', 'pending') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Semua Cuti</a>
+                    </li>
+                    @if(auth()->user()->role === 'manager')
+                    <li>
+                        <a href="{{ route('admin.cuti.status', 'approved_manager') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Disetujui</a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.cuti', 'Approved') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Approved</a>
+                        <a href="{{ route('admin.cuti.status', 'rejected_manager') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Ditolak</a>
+                    </li>
+                    @elseif(auth()->user()->role === 'hrd')
+                    <li>
+                        <a href="{{ route('admin.cuti.status', 'approved_hrd') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Disetujui</a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.cuti', 'Rejected') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Rejected</a>
+                        <a href="{{ route('admin.cuti.status', 'rejected_hrd') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Ditolak</a>
                     </li>
+                    @endif
                     @if (auth()->user()->role === 'hrd')
                         <li>
                         <a href="{{ route('admin.laporan.cuti') }}" 

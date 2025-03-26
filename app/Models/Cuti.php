@@ -25,13 +25,22 @@ class Cuti extends Model
     // Relasi ke tabel Users
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id');
+        return $this->belongsTo(User::class, 'id_user');
     }
 
     // Relasi ke tabel JenisCuti
     public function jenisCuti()
     {
-        return $this->belongsTo(JenisCuti::class, 'jenis_cuti', 'id');
+        return $this->belongsTo(JenisCuti::class, 'jenis_cuti');
+    }
+
+    // Relasi ke tabel Departemen melalui user
+    public function departemen()
+    {
+        return $this->belongsTo(Departemen::class, 'departemen_id', 'id')
+            ->whereHas('user', function ($query) {
+                $query->where('id', $this->id_user);
+            });
     }
 
     // Filter data cuti berdasarkan status

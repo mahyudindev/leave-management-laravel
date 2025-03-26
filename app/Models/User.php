@@ -52,28 +52,28 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Get the user's department.
+     */
     public function departemen()
     {
         return $this->belongsTo(Departemen::class);
     }
-    
 
-
+    /**
+     * Get the user's position.
+     */
     public function jabatan()
     {
         return $this->belongsTo(Jabatan::class);
     }
 
-
-
-    // public function cuti()
-    // {
-    //     return $this->hasMany(Cuti::class, 'id_user', 'id');
-    // }
-
+    /**
+     * Get the user's leave requests.
+     */
     public function cuti()
-{
-    return $this->hasMany(Cuti::class, 'id_user', 'id');
-}
+    {
+        return $this->hasMany(Cuti::class, 'id_user');
+    }
 
 }

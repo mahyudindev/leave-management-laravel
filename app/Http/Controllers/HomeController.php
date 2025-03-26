@@ -11,9 +11,9 @@ class HomeController extends Controller
     public function index()
     {
         $totalKaryawan = User::count(); // Menghitung total karyawan
-        $pending = Cuti::where('status', 'Pending')->count(); // Menghitung status Pending
-        $approved = Cuti::where('status', 'Approved')->count(); // Menghitung status Approved
-        $rejected = Cuti::where('status', 'Rejected')->count(); // Menghitung status Rejected
+        $pending = Cuti::where('status', 'pending')->count(); // Menghitung status pending
+        $approved = Cuti::whereIn('status', ['approved_manager', 'approved_hrd'])->count(); // Menghitung status approved
+        $rejected = Cuti::whereIn('status', ['rejected_manager', 'rejected_hrd'])->count(); // Menghitung status rejected
 
         return view('admin.dashboard', compact('totalKaryawan', 'pending', 'approved', 'rejected'));
     }

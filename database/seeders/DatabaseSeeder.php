@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,8 +17,9 @@ class DatabaseSeeder extends Seeder
         // Create departments and positions first
         $this->call([
             UserSeeder::class,
-            // DepartmentSeeder::class,
-            // PositionSeeder::class
+            JabatanSeeder::class,
+            JenisCuti::class,
+            
         ]);
     }
 }

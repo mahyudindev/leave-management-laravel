@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Cuti;
 use App\Models\JenisCuti;
@@ -15,7 +16,7 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $totalTerpakai = Cuti::where('id_user', $user->id)
-            ->where('status', 'Approved')
+            ->whereIn('status', ['approved_manager', 'pending', 'approved_hrd'])
             ->sum('jumlah');
         $jumlahCuti = $user ? $user->jumlah_cuti : 'Data tidak tersedia';
     
@@ -80,74 +81,25 @@ class DashboardController extends Controller
         return view('users.history', compact('riwayatCuti'));
     }
 
-    public function adminCuti($status = 'pending')
+    public function adminCuti($status)
     {
-        $allowedStatuses = ['pending', 'approved_manager', 'approved_hrd', 'rejected_manager', 'rejected_hrd'];
         $status = strtolower($status);
-        
+        $allowedStatuses = ['pending', 'approved_manager', 'rejected_manager', 'approved_hrd', 'rejected_hrd'];
         if (!in_array($status, $allowedStatuses)) {
-            // Map the status to the appropriate database values
-            if ($status === 'pending') {
-                $status = 'pending';
-            } elseif ($status === 'approved') {
-                if (auth()->user()->role === 'manager') {
-                    $status = 'approved_manager';
-                } else {
-                    $status = 'approved_hrd';
-                }
-            } elseif ($status === 'rejected') {
-                if (auth()->user()->role === 'manager') {
-                    $status = 'rejected_manager';
-                } else {
-                    $status = 'rejected_hrd';
-                }
-            } else {
-                abort(404);
-            }
+            abort(404);
         }
 
-        $user = auth()->user();
-        $query = Cuti::with([
-            'user' => function ($query) {
-                $query->with('departemen');
-            },
-            'jenisCuti'
-        ]);
+        $daftarCuti = Cuti::with(['user', 'jenisCuti'])
+            ->where('status', 'like', $status)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
-        // Filter based on user role and status
-        if ($user->role === 'manager') {
-            // For managers: only show cuti from their department
-            $query->whereHas('user', function($q) use ($user) {
-                $q->where('departemen_id', $user->departemen_id);
-            });
-            
-            if ($status === 'pending') {
-                $query->where('status', 'pending');
-            } elseif ($status === 'approved' || $status === 'approved_manager') {
-                $query->where('status', 'approved_manager');
-            } elseif ($status === 'rejected' || $status === 'rejected_manager') {
-                $query->where('status', 'rejected_manager');
-            }
-        } elseif ($user->role === 'hrd') {
-            if ($status === 'pending') {
-                $query->where('status', 'approved_manager'); // HRD sees manager-approved as pending
-            } elseif ($status === 'approved' || $status === 'approved_hrd') {
-                $query->where('status', 'approved_hrd');
-            } elseif ($status === 'rejected' || $status === 'rejected_hrd') {
-                $query->where('status', 'rejected_hrd');
-            }
-        } else {
-            // For admin or other roles
-            if ($status === 'pending') {
-                $query->where('status', 'pending');
-            } elseif ($status === 'approved') {
-                $query->whereIn('status', ['approved_manager', 'approved_hrd']);
-            } elseif ($status === 'rejected') {
-                $query->whereIn('status', ['rejected_manager', 'rejected_hrd']);
-            }
+        // Debug information
+        if ($daftarCuti->isEmpty()) {
+            \Log::info('No cuti found for status: ' . $status);
+            \Log::info('Total cuti in database: ' . Cuti::count());
+            \Log::info('Available statuses: ' . implode(', ', Cuti::distinct()->pluck('status')->toArray()));
         }
-
-        $daftarCuti = $query->paginate(10);
 
         return view('admin.cuti.index', compact('daftarCuti', 'status'));
     }
@@ -155,15 +107,15 @@ class DashboardController extends Controller
     public function updateCuti(Request $request, $id)
     {
         $cuti = Cuti::findOrFail($id);
-        $action = $request->action;
+        $action = $request->input('action');
         $notes = $request->input('notes', null);
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($action === 'reject' && !$notes) {
             return redirect()->back()->with('error', 'Catatan harus diisi jika pengajuan ditolak.');
         }
 
-        $employee = $cuti->user;
+        $userCuti = $cuti->user;
 
         if ($action === 'approve') {
             if ($cuti->status === 'pending') {
@@ -174,17 +126,13 @@ class DashboardController extends Controller
                     $cuti->status = 'approved_hrd';
                     $cuti->notes_hrd = null;
                 }
-            } elseif ($cuti->status === 'approved_manager' && $user->role === 'hrd') {
-                // HRD can approve manager-approved cuti
-                $cuti->status = 'approved_hrd';
-                $cuti->notes_hrd = null;
             }
         } elseif ($action === 'reject') {
             if ($cuti->status === 'pending') {
                 // Kembalikan jumlah cuti jika ditolak
-                $employee->jumlah_cuti += $cuti->jumlah;
-                $employee->save();
-                
+                $userCuti->jumlah_cuti += $cuti->jumlah;
+                $userCuti->save();
+
                 if ($user->role === 'manager') {
                     $cuti->status = 'rejected_manager';
                     $cuti->notes_manager = $notes;
@@ -192,12 +140,6 @@ class DashboardController extends Controller
                     $cuti->status = 'rejected_hrd';
                     $cuti->notes_hrd = $notes;
                 }
-            } elseif ($cuti->status === 'approved_manager' && $user->role === 'hrd') {
-                // HRD can reject manager-approved cuti
-                $employee->jumlah_cuti += $cuti->jumlah;
-                $employee->save();
-                $cuti->status = 'rejected_hrd';
-                $cuti->notes_hrd = $notes;
             }
         }
 

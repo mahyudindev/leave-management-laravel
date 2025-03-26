@@ -21,7 +21,7 @@
                 @endif
 
                 {{-- Pending --}}
-                <div onclick="location.href='{{ route('admin.cuti', 'Pending') }}'" class="cursor-pointer p-4 bg-yellow-100 dark:bg-yellow-900 rounded-lg shadow-sm">
+                <div onclick="location.href='{{ route('admin.cuti.status', 'pending') }}'" class="cursor-pointer p-4 bg-yellow-100 dark:bg-yellow-900 rounded-lg shadow-sm">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-yellow-600 dark:text-yellow-200">Pending</p>
@@ -31,7 +31,13 @@
                 </div>
 
                 {{-- Approved --}}
-                <div onclick="location.href='{{ route('admin.cuti', 'Approved') }}'" class="cursor-pointer p-4 bg-green-100 dark:bg-green-900 rounded-lg shadow-sm">
+                @if(auth()->user()->role === 'manager')
+                <div onclick="location.href='{{ route('admin.cuti.status', 'approved') }}'" class="cursor-pointer p-4 bg-green-100 dark:bg-green-900 rounded-lg shadow-sm">
+                @elseif(auth()->user()->role === 'hrd')
+                <div onclick="location.href='{{ route('admin.cuti.status', 'approved') }}'" class="cursor-pointer p-4 bg-green-100 dark:bg-green-900 rounded-lg shadow-sm">
+                @else
+                <div onclick="location.href='{{ route('admin.cuti.index') }}'" class="cursor-pointer p-4 bg-green-100 dark:bg-green-900 rounded-lg shadow-sm">
+                @endif
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-green-600 dark:text-green-200">Approved</p>
@@ -41,7 +47,13 @@
                 </div>
 
                 {{-- Rejected --}}
-                <div onclick="location.href='{{ route('admin.cuti', 'Rejected') }}'" class="cursor-pointer p-4 bg-red-100 dark:bg-red-900 rounded-lg shadow-sm">
+                @if(auth()->user()->role === 'manager')
+                <div onclick="location.href='{{ route('admin.cuti.status', 'rejected') }}'" class="cursor-pointer p-4 bg-red-100 dark:bg-red-900 rounded-lg shadow-sm">
+                @elseif(auth()->user()->role === 'hrd')
+                <div onclick="location.href='{{ route('admin.cuti.status', 'rejected') }}'" class="cursor-pointer p-4 bg-red-100 dark:bg-red-900 rounded-lg shadow-sm">
+                @else
+                <div onclick="location.href='{{ route('admin.cuti.index') }}'" class="cursor-pointer p-4 bg-red-100 dark:bg-red-900 rounded-lg shadow-sm">
+                @endif
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-red-600 dark:text-red-200">Rejected</p>
