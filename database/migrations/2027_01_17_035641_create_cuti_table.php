@@ -15,8 +15,9 @@ return new class extends Migration
             $table->date('tanggal_akhir');
             $table->integer('jumlah');
             $table->foreignId('jenis_cuti')->constrained('jenis_cuti')->onDelete('cascade');
-            $table->enum('status', ['Approved', 'Rejected', 'Pending'])->default('Pending');
-            $table->text('notes')->nullable();
+            $table->enum('status', ['Pending', 'Manager Approved', 'Manager Rejected', 'HRD Approved', 'HRD Rejected'])->default('Pending');
+            $table->text('notes_manager')->nullable();
+            $table->text('notes_hrd')->nullable();
             $table->timestamps();
         });
     }
@@ -26,5 +27,3 @@ return new class extends Migration
         Schema::dropIfExists('cuti');
     }
 };
-
-

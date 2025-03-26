@@ -14,6 +14,7 @@
             </li>
 
             <!-- Karyawan -->
+            @if (auth()->user()->role === 'hrd')
             <li>
                 <button @click="openDropdown = openDropdown === 'karyawan' ? null : 'karyawan'" type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
                     <svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -94,6 +95,7 @@
                     </li>
                 </ul>
             </li>
+            @endif
             <!-- Cuti -->
             <li>
                 <button @click="openDropdown = openDropdown === 'cuti' ? null : 'cuti'" type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
@@ -116,12 +118,15 @@
                     <li>
                         <a href="{{ route('admin.cuti', 'Rejected') }}" class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Rejected</a>
                     </li>
-                    <li>
+                    @if (auth()->user()->role === 'hrd')
+                        <li>
                         <a href="{{ route('admin.laporan.cuti') }}" 
-                           class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
-                            Laporan Cuti
+                        class="flex items-center w-full p-2 pl-11 text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                        Laporan Cuti
                         </a>
                     </li>
+                    @endif
+                    
                     
                 </ul>
                 

@@ -16,13 +16,11 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->role === 'admin')
+        if (Auth::user()->role === 'hrd' || Auth::user()->role === 'manager')
         {
             return $next($request);
+        }
 
-        }abort(403, 'Maaf Anda Tidak Memiliki Akses');
-
-
-
+        abort(403, 'Maaf Anda Tidak Memiliki Akses');
     }
 }

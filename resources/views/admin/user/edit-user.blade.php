@@ -22,7 +22,7 @@
                 <!-- Nama -->
                 <div class="mb-4">
                     <label for="name" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Nama:</label>
-                    <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}"
+                    <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" maxlength="30"
                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-500 @enderror">
                     @error('name')
                         <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
@@ -32,7 +32,7 @@
                 <!-- Email -->
                 <div class="mb-4">
                     <label for="email" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Email:</label>
-                    <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}"
+                    <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" maxlength="30"
                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-500 @enderror">
                     @error('email')
                         <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
@@ -43,8 +43,9 @@
                 <div class="mb-4">
                     <label for="password" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Password:</label>
                     <div class="relative">
-                        <input type="password" name="password" id="password" 
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-500 @enderror">
+                        <input type="password" name="password" id="password" maxlength="70"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-500 @enderror"
+                               placeholder="Leave blank to keep current password">
                         <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer" onclick="togglePasswordVisibility('password', this)">
                             <svg class="w-6 h-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="password-icon">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825a10.05 10.05 0 01-1.875.175c-4.67 0-8.43-3.358-10-8.005 1.57-4.647 5.33-8.005 10-8.005 1.14 0 2.241.198 3.283.555M15 12a3 3 0 11-6 0 3 3 0 016 0zm3.238 3.238a8.977 8.977 0 002.205-3.23 10.042 10.042 0 00-1.403-2.137m-2.244-1.607a8.943 8.943 0 00-2.962-2.648" />
@@ -72,10 +73,20 @@
 
                 <!-- Tanggal Masuk -->
                 <div class="mb-4">
-                    <label for="tanggal_masuk" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Tanggal Masuk:</label>
-                    <input type="date" name="tanggal_masuk" id="tanggal_masuk" value="{{ old('tanggal_masuk', $user->tanggal_masuk) }}"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('tanggal_masuk') border-red-500 @enderror">
-                    @error('tanggal_masuk')
+                    <label for="tanggal_masuk_kerja" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Tanggal Masuk:</label>
+                    <input type="date" name="tanggal_masuk_kerja" id="tanggal_masuk_kerja" value="{{ old('tanggal_masuk_kerja', $user->tanggal_masuk_kerja) }}"
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('tanggal_masuk_kerja') border-red-500 @enderror">
+                    @error('tanggal_masuk_kerja')
+                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Tanggal Akhir -->
+                <div class="mb-4">
+                    <label for="tanggal_akhir_kerja" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Tanggal Akhir:</label>
+                    <input type="date" name="tanggal_akhir_kerja" id="tanggal_akhir_kerja" value="{{ old('tanggal_akhir_kerja', $user->tanggal_akhir_kerja) }}"
+                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('tanggal_akhir_kerja') border-red-500 @enderror">
+                    @error('tanggal_akhir_kerja')
                         <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
@@ -83,7 +94,7 @@
                 <!-- Jumlah Cuti -->
                 <div class="mb-4">
                     <label for="jumlah_cuti" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Jumlah Cuti:</label>
-                    <input type="number" name="jumlah_cuti" id="jumlah_cuti" value="{{ old('jumlah_cuti', $user->jumlah_cuti) }}"
+                    <input type="text" name="jumlah_cuti" id="jumlah_cuti" value="{{ old('jumlah_cuti', $user->jumlah_cuti) }}" maxlength="2"
                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('jumlah_cuti') border-red-500 @enderror">
                     @error('jumlah_cuti')
                         <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
@@ -129,8 +140,9 @@
                     <label for="role" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Role:</label>
                     <select name="role" id="role"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('role') border-red-500 @enderror">
-                        <option value="user" {{ old('role', $user->role) === 'user' ? 'selected' : '' }}>User</option>
-                        <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="pegawai" {{ old('role', $user->role) === 'pegawai' ? 'selected' : '' }}>Pegawai</option>
+                        <option value="manager" {{ old('role', $user->role) === 'manager' ? 'selected' : '' }}>Manager</option>
+                        <option value="hrd" {{ old('role', $user->role) === 'hrd' ? 'selected' : '' }}>HRD</option>
                     </select>
                     @error('role')
                         <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>

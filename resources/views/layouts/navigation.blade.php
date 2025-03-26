@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}">
+                    <a href="{{ in_array(auth()->user()->role, ['hrd', 'manager']) ? route('admin.dashboard') : route('dashboard') }}">
                         <x-application-logo class="block h-20 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                 </div>
@@ -73,7 +73,7 @@
         </div>
 </nav>
 @auth
-    @if(Auth::user()->role == 'user')
+    @if(Auth::user()->role == 'pegawai')
         <div class="fixed bottom-0 left-0 right-0 bg-white/50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700 backdrop-blur-lg">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-around h-16 items-center">

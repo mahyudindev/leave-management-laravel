@@ -10,20 +10,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id(); // Primary key
+            $table->id();
             $table->string('nik', 10)->unique();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->foreignId('jabatan_id')->nullable()->constrained('jabatan');
-            $table->foreignId('departemen_id')->nullable()->constrained('departemen');
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->date('tanggal_masuk');
-            $table->string('jumlah_cuti', 10);
-            $table->enum('role', ['admin', 'user'])->default('user');
+            $table->string('name', 30);
+            $table->string('email', 30)->unique();
+            $table->string('password',70);
+            $table->date('tanggal_masuk_kerja')->nullable();
+            $table->date('tanggal_akhir_kerja')->nullable();
+            $table->string('jumlah_cuti', 2);
+            $table->enum('role', ['hrd','manager', 'pegawai'])->default('pegawai');
             $table->rememberToken();
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
 
+            // Add foreign key constraints after all columns
+            $table->foreignId('jabatan_id')->nullable()->constrained('jabatan', 'id');
+            $table->foreignId('departemen_id')->nullable()->constrained('departemen', 'id');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

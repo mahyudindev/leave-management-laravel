@@ -9,6 +9,7 @@
             {{-- Stats Cards --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {{-- Total Karyawan --}}
+                @if(auth()->user()->role === 'hrd')
                 <div onclick="location.href='{{ route('admin.user.index') }}'" class="cursor-pointer p-4 bg-blue-100 dark:bg-blue-900 rounded-lg shadow-sm">
                     <div class="flex items-center justify-between">
                         <div>
@@ -17,6 +18,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 {{-- Pending --}}
                 <div onclick="location.href='{{ route('admin.cuti', 'Pending') }}'" class="cursor-pointer p-4 bg-yellow-100 dark:bg-yellow-900 rounded-lg shadow-sm">

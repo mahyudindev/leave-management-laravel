@@ -51,8 +51,8 @@
                             <td class="px-6 py-4">{{ $loop->iteration }}</td>
                             <td class="px-6 py-4">{{ $cuti->user->name }}</td>
                             <td class="px-6 py-4">{{ $cuti->jenisCuti->nama_cuti }}</td>
-                            <td class="px-6 py-4">{{ $cuti->tanggal_awal }}</td>
-                            <td class="px-6 py-4">{{ $cuti->tanggal_akhir }}</td>
+                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($cuti->tanggal_awal)->format('d-m-Y') }}</td>
+                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($cuti->tanggal_akhir)->format('d-m-Y') }}</td>
                             <td class="px-6 py-4">{{ $cuti->jumlah }} Hari</td>
                             <td class="px-6 py-4">
                                 @if ($status === 'Pending')

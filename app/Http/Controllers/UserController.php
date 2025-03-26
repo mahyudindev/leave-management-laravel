@@ -62,13 +62,16 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|string|confirmed|min:8',
-            'jumlah_cuti' => 'required|integer|min:0',
+            'nik' => 'required|string|max:10|unique:users,nik,' . $id,
+            'name' => 'required|string|max:30',
+            'email' => 'required|string|email|max:30|unique:users,email,' . $id,
+            'password' => 'nullable|string|max:70',
+            'tanggal_masuk_kerja' => 'nullable|date',
+            'tanggal_akhir_kerja' => 'nullable|date|after_or_equal:tanggal_masuk_kerja',
+            'jumlah_cuti' => 'required|string|max:2',
             'departemen_id' => 'nullable|exists:departemen,id',
             'jabatan_id' => 'nullable|exists:jabatan,id',
-            'role' => 'required|in:user,admin',
+            'role' => 'required|in:hrd,manager,pegawai',
         ]);
 
         $user = DB::table('users')->where('id', $id)->first();
@@ -78,8 +81,11 @@ class UserController extends Controller
         }
 
         $data = [
+            'nik' => $request->nik,
             'name' => $request->name,
             'email' => $request->email,
+            'tanggal_masuk_kerja' => $request->tanggal_masuk_kerja,
+            'tanggal_akhir_kerja' => $request->tanggal_akhir_kerja,
             'jumlah_cuti' => $request->jumlah_cuti,
             'departemen_id' => $request->departemen_id,
             'jabatan_id' => $request->jabatan_id,
@@ -87,7 +93,6 @@ class UserController extends Controller
             'updated_at' => now(),
         ];
 
-        // Jika password diisi, tambahkan ke data yang akan diupdate
         if (!empty($request->password)) {
             $data['password'] = Hash::make($request->password);
         }
@@ -108,15 +113,16 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nik' => 'required|string|max:20|unique:users,nik',
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|confirmed|min:8',
-            'role' => 'required|in:user,admin',
-            'tanggal_masuk' => 'required|date',
-            'jumlah_cuti' => 'required|integer|min:0',
+            'nik' => 'required|string|max:10|unique:users,nik',
+            'name' => 'required|string|max:30',
+            'email' => 'required|string|email|max:30|unique:users,email',
+            'password' => 'required|string|max:70',
+            'tanggal_masuk_kerja' => 'required|date',
+            'tanggal_akhir_kerja' => 'nullable|date|after_or_equal:tanggal_masuk_kerja',
+            'jumlah_cuti' => 'required|string|max:2',
             'departemen_id' => 'nullable|exists:departemen,id',
             'jabatan_id' => 'nullable|exists:jabatan,id',
+            'role' => 'required|in:hrd,manager,pegawai',
         ]);
 
         DB::table('users')->insert([
@@ -124,11 +130,12 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'tanggal_masuk' => $request->tanggal_masuk,
+            'tanggal_masuk_kerja' => $request->tanggal_masuk_kerja,
+            'tanggal_akhir_kerja' => $request->tanggal_akhir_kerja,
             'jumlah_cuti' => $request->jumlah_cuti,
             'departemen_id' => $request->departemen_id,
             'jabatan_id' => $request->jabatan_id,
+            'role' => $request->role,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
