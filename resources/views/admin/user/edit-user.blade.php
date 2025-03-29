@@ -2,175 +2,186 @@
     <x-admin-sidebar />
 
     <div class="p-4 sm:ml-64">
-        <div class="bg-white dark:bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <h1 class="text-2xl font-bold text-center text-black dark:text-white mb-6">Edit Data Karyawan</h1>
-
-            <form action="{{ route('admin.user.update', $user->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-
-                <!-- NIK -->
-                <div class="mb-4">
-                    <label for="nik" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">NIK:</label>
-                    <input type="text" name="nik" id="nik" value="{{ old('nik', $user->nik) }}" maxlength="10"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('nik') border-red-500 @enderror">
-                    @error('nik')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <!-- Nama -->
-                <div class="mb-4">
-                    <label for="name" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Nama:</label>
-                    <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" maxlength="30"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-500 @enderror">
-                    @error('name')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <!-- Email -->
-                <div class="mb-4">
-                    <label for="email" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Email:</label>
-                    <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" maxlength="30"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('email') border-red-500 @enderror">
-                    @error('email')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <!-- Password -->
-                <div class="mb-4">
-                    <label for="password" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Password:</label>
-                    <div class="relative">
-                        <input type="password" name="password" id="password" maxlength="70"
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-500 @enderror"
-                               placeholder="Leave blank to keep current password">
-                        <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer" onclick="togglePasswordVisibility('password', this)">
-                            <svg class="w-6 h-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="password-icon">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825a10.05 10.05 0 01-1.875.175c-4.67 0-8.43-3.358-10-8.005 1.57-4.647 5.33-8.005 10-8.005 1.14 0 2.241.198 3.283.555M15 12a3 3 0 11-6 0 3 3 0 016 0zm3.238 3.238a8.977 8.977 0 002.205-3.23 10.042 10.042 0 00-1.403-2.137m-2.244-1.607a8.943 8.943 0 00-2.962-2.648" />
-                            </svg>
-                        </span>
+        <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
+                <form action="{{ route('admin.user.update', $user->id) }}" method="POST" class="space-y-4">
+                    @csrf
+                    @method('PUT')
+                    
+                    <!-- NIK -->
+                    <div class="mb-4">
+                        <label for="nik" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">NIK:</label>
+                        <input type="text" name="nik" id="nik" value="{{ old('nik', $user->nik) }}" maxlength="10" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        @error('nik')
+                            <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
-                    @error('password')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
-                
-                <!-- Konfirmasi Password -->
-                <div class="mb-4">
-                    <label for="password_confirmation" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Konfirmasi Password:</label>
-                    <div class="relative">
-                        <input type="password" name="password_confirmation" id="password_confirmation" 
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer" onclick="togglePasswordVisibility('password_confirmation', this)">
-                            <svg class="w-6 h-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="password-confirmation-icon">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825a10.05 10.05 0 01-1.875.175c-4.67 0-8.43-3.358-10-8.005 1.57-4.647 5.33-8.005 10-8.005 1.14 0 2.241.198 3.283.555M15 12a3 3 0 11-6 0 3 3 0 016 0zm3.238 3.238a8.977 8.977 0 002.205-3.23 10.042 10.042 0 00-1.403-2.137m-2.244-1.607a8.943 8.943 0 00-2.962-2.648" />
-                            </svg>
-                        </span>
+
+                    <!-- Nama -->
+                    <div class="mb-4">
+                        <label for="name" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Nama:</label>
+                        <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" maxlength="30" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        @error('name')
+                            <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
-                </div>
 
-                <!-- Tanggal Masuk -->
-                <div class="mb-4">
-                    <label for="tanggal_masuk_kerja" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Tanggal Masuk:</label>
-                    <input type="date" name="tanggal_masuk_kerja" id="tanggal_masuk_kerja" value="{{ old('tanggal_masuk_kerja', $user->tanggal_masuk_kerja) }}"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('tanggal_masuk_kerja') border-red-500 @enderror">
-                    @error('tanggal_masuk_kerja')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
+                    <!-- Email -->
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Email:</label>
+                        <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" maxlength="30" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        @error('email')
+                            <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                <!-- Tanggal Akhir -->
-                <div class="mb-4">
-                    <label for="tanggal_akhir_kerja" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Tanggal Akhir:</label>
-                    <input type="date" name="tanggal_akhir_kerja" id="tanggal_akhir_kerja" value="{{ old('tanggal_akhir_kerja', $user->tanggal_akhir_kerja) }}"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('tanggal_akhir_kerja') border-red-500 @enderror">
-                    @error('tanggal_akhir_kerja')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
+                    <!-- Password -->
+                    <div class="mb-4">
+                        <label for="password" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Password: (Kosongkan jika tidak ingin mengubah)</label>
+                        <div class="relative">
+                            <input type="password" name="password" id="password" maxlength="70"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer" onclick="togglePasswordVisibility('password', this)">
+                                <svg class="w-6 h-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="password-icon">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </span>
+                        </div>
+                        @error('password')
+                            <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                <!-- Jumlah Cuti -->
-                <div class="mb-4">
-                    <label for="jumlah_cuti" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Jumlah Cuti:</label>
-                    <input type="text" name="jumlah_cuti" id="jumlah_cuti" value="{{ old('jumlah_cuti', $user->jumlah_cuti) }}" maxlength="2"
-                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('jumlah_cuti') border-red-500 @enderror">
-                    @error('jumlah_cuti')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
+                    <!-- Konfirmasi Password -->
+                    <div class="mb-4">
+                        <label for="password_confirmation" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Konfirmasi Password:</label>
+                        <div class="relative">
+                            <input type="password" name="password_confirmation" id="password_confirmation" maxlength="70"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer" onclick="togglePasswordVisibility('password_confirmation', this)">
+                                <svg class="w-6 h-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="password-confirmation-icon">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
 
-                <!-- Dropdown Departemen -->
-                <div class="mb-4">
-                    <label for="departemen_id" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Departemen:</label>
-                    <select name="departemen_id" id="departemen_id"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('departemen_id') border-red-500 @enderror">
-                        <option value="">Pilih Departemen</option>
-                        @foreach ($departemen as $dept)
-                            <option value="{{ $dept->id }}" {{ old('departemen_id', $user->departemen_id) == $dept->id ? 'selected' : '' }}>
-                                {{ $dept->nama }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('departemen_id')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
+                    <!-- Tanggal Masuk Kerja -->
+                    <div class="mb-4">
+                        <label for="tanggal_masuk_kerja" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Tanggal Masuk Kerja:</label>
+                        <input type="date" name="tanggal_masuk_kerja" id="tanggal_masuk_kerja" value="{{ old('tanggal_masuk_kerja', $user->tanggal_masuk_kerja ? $user->tanggal_masuk_kerja->format('Y-m-d') : '') }}"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500" onclick="this.showPicker()">
+                        @error('tanggal_masuk_kerja')
+                            <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                <!-- Dropdown Jabatan -->
-                <div class="mb-4">
-                    <label for="jabatan_id" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Jabatan:</label>
-                    <select name="jabatan_id" id="jabatan_id"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('jabatan_id') border-red-500 @enderror">
-                        <option value="">Pilih Jabatan</option>
-                        @foreach ($jabatan as $job)
-                            <option value="{{ $job->id }}" {{ old('jabatan_id', $user->jabatan_id) == $job->id ? 'selected' : '' }}>
-                                {{ $job->nama }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('jabatan_id')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
+                    <!-- Tanggal Akhir Kerja -->
+                    <div class="mb-4">
+                        <label for="tanggal_akhir_kerja" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Tanggal Akhir Kerja:</label>
+                        <input type="date" name="tanggal_akhir_kerja" id="tanggal_akhir_kerja" value="{{ old('tanggal_akhir_kerja', $user->tanggal_akhir_kerja ? $user->tanggal_akhir_kerja->format('Y-m-d') : '') }}"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500" onclick="this.showPicker()">
+                        @error('tanggal_akhir_kerja')
+                            <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                <!-- Role -->
-                <div class="mb-4">
-                    <label for="role" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Role:</label>
-                    <select name="role" id="role"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('role') border-red-500 @enderror">
-                        <option value="pegawai" {{ old('role', $user->role) === 'pegawai' ? 'selected' : '' }}>Pegawai</option>
-                        <option value="manager" {{ old('role', $user->role) === 'manager' ? 'selected' : '' }}>Manager</option>
-                        <option value="hrd" {{ old('role', $user->role) === 'hrd' ? 'selected' : '' }}>HRD</option>
-                    </select>
-                    @error('role')
-                        <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
+                    <!-- Jumlah Cuti -->
+                    <div class="mb-4">
+                        <label for="jumlah_cuti" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Jumlah Cuti:</label>
+                        <input type="text" name="jumlah_cuti" id="jumlah_cuti" value="{{ old('jumlah_cuti', $user->jumlah_cuti) }}" maxlength="2" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        @error('jumlah_cuti')
+                            <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                <!-- Tombol -->
-                <div class="flex items-center justify-between">
-                    <button type="submit"
+                    <!-- Role -->
+                    <div class="mb-4">
+                        <label for="role" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Role:</label>
+                        <select name="role" id="role" required
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Pilih Role</option>
+                            <option value="hrd" {{ old('role', $user->role) == 'hrd' ? 'selected' : '' }}>HRD</option>
+                            <option value="manager" {{ old('role', $user->role) == 'manager' ? 'selected' : '' }}>Manager</option>
+                            <option value="pegawai" {{ old('role', $user->role) == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
+                        </select>
+                        @error('role')
+                            <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Departemen -->
+                    <div class="mb-4">
+                        <label for="departemen_id" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Departemen:</label>
+                        <select name="departemen_id" id="departemen_id"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Pilih Departemen</option>
+                            @foreach($departemens as $departemen)
+                                <option value="{{ $departemen->id }}" {{ old('departemen_id', $user->departemen_id) == $departemen->id ? 'selected' : '' }}>
+                                    {{ $departemen->nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('departemen_id')
+                            <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Jabatan -->
+                    <div class="mb-4">
+                        <label for="jabatan_id" class="block text-gray-700 dark:text-gray-200 font-bold mb-2">Jabatan:</label>
+                        <select name="jabatan_id" id="jabatan_id"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Pilih Jabatan</option>
+                            @foreach($jabatans as $jabatan)
+                                <option value="{{ $jabatan->id }}" {{ old('jabatan_id', $user->jabatan_id) == $jabatan->id ? 'selected' : '' }}>
+                                    {{ $jabatan->nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('jabatan_id')
+                            <span class="text-red-500 dark:text-red-400 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="flex items-center justify-between mt-4">
+                        <button type="submit"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        Simpan
-                    </button>
-                    <a href="{{ route('admin.user.index') }}" class="text-blue-500 dark:text-blue-400 hover:underline">Batal</a>
-                </div>
-            </form>
+                            Update
+                        </button>
+                        <a href="{{ route('admin.user.index') }}"
+                            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Kembali
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+
     <script>
-        function togglePasswordVisibility(inputId, iconElement) {
+        function togglePasswordVisibility(inputId, icon) {
             const input = document.getElementById(inputId);
-            const icon = iconElement.querySelector('svg');
-    
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm1.707-6.707A10.034 10.034 0 0113.875 4.175 10.05 10.05 0 0112 4c-4.67 0-8.43 3.358-10 8.005 1.57 4.647 5.33 8.005 10 8.005a9.989 9.989 0 007.32-3.072l.157-.157M17 12h.01" />';
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            
+            // Update icon
+            const svg = icon.querySelector('svg');
+            if (type === 'text') {
+                svg.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                `;
             } else {
-                input.type = 'password';
-                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825a10.05 10.05 0 01-1.875.175c-4.67 0-8.43-3.358-10-8.005 1.57-4.647 5.33-8.005 10-8.005 1.14 0 2.241.198 3.283.555M15 12a3 3 0 11-6 0 3 3 0 016 0zm3.238 3.238a8.977 8.977 0 002.205-3.23 10.042 10.042 0 00-1.403-2.137m-2.244-1.607a8.943 8.943 0 00-2.962-2.648" />';
+                svg.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                `;
             }
         }
     </script>

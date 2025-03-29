@@ -1,5 +1,9 @@
 <x-app-layout>
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-5">
+    @if(auth()->user()->role === 'manager')
+    <x-admin-sidebar />
+    @endif
+
+    <div class="@if(auth()->user()->role === 'manager') p-4 sm:ml-64 @else max-w-7xl mx-auto sm:px-6 lg:px-8 mt-5 @endif">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900 dark:text-gray-100">
                 <h3 class="text-lg font-semibold mb-4">Pengajuan Cuti</h3>
@@ -49,11 +53,11 @@
                     </div>
                     <div class="mb-4">
                         <label for="tanggal_awal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Awal</label>
-                        <input type="date" id="tanggal_awal" name="tanggal_awal" class="block w-full mt-1 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <input type="date" id="tanggal_awal" name="tanggal_awal" class="block w-full mt-1 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" onclick="this.showPicker()">
                     </div>
                     <div class="mb-4">
                         <label for="tanggal_akhir" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Akhir</label>
-                        <input type="date" id="tanggal_akhir" name="tanggal_akhir" class="block w-full mt-1 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <input type="date" id="tanggal_akhir" name="tanggal_akhir" class="block w-full mt-1 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" onclick="this.showPicker()">
                     </div>
                     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded dark:bg-blue-600 dark:hover:bg-blue-800">
                         Ajukan

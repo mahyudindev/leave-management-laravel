@@ -5,18 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Departemen;
 use App\Models\Jabatan;
+use App\Exports\UsersExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\UsersExport;
-use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $users = DB::table('users')
-            ->select('users.*', 'departemen.nama as departemen_nama', 'jabatan.nama as jabatan_nama')
+        $users = User::select('users.*', 'departemen.nama as departemen_nama', 'jabatan.nama as jabatan_nama')
             ->leftJoin('departemen', 'users.departemen_id', '=', 'departemen.id')
             ->leftJoin('jabatan', 'users.jabatan_id', '=', 'jabatan.id')
             ->when($request->input('nama'), function ($query, $nama) {
@@ -29,21 +27,14 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $user = DB::table('users')->where('id', $id)->first();
-
-        if (!$user) {
-            return redirect()->route('admin.user.index')->with('error', 'User not found');
-        }
-
-        DB::table('users')->where('id', $id)->delete();
-
+        $user = User::findOrFail($id);
+        $user->delete();
         return redirect()->route('admin.user.index')->with('success', 'User deleted successfully');
     }
 
     public function edit($id)
     {
-        $user = DB::table('users')
-            ->select('users.*', 'departemen.nama as departemen_nama', 'jabatan.nama as jabatan_nama')
+        $user = User::select('users.*', 'departemen.nama as departemen_nama', 'jabatan.nama as jabatan_nama')
             ->leftJoin('departemen', 'users.departemen_id', '=', 'departemen.id')
             ->leftJoin('jabatan', 'users.jabatan_id', '=', 'jabatan.id')
             ->where('users.id', $id)
@@ -53,10 +44,9 @@ class UserController extends Controller
             return redirect()->route('admin.user.index')->with('error', 'User not found');
         }
 
-        $departemen = DB::table('departemen')->get();
-        $jabatan = DB::table('jabatan')->get();
-
-        return view('admin.user.edit-user', compact('user', 'departemen', 'jabatan'));
+        $departemens = Departemen::all();
+        $jabatans = Jabatan::all();
+        return view('admin.user.edit-user', compact('user', 'departemens', 'jabatans'));
     }
 
     public function update(Request $request, $id)
@@ -74,11 +64,7 @@ class UserController extends Controller
             'role' => 'required|in:hrd,manager,pegawai',
         ]);
 
-        $user = DB::table('users')->where('id', $id)->first();
-
-        if (!$user) {
-            return redirect()->route('admin.user.index')->with('error', 'User not found');
-        }
+        $user = User::findOrFail($id);
 
         $data = [
             'nik' => $request->nik,
@@ -97,17 +83,16 @@ class UserController extends Controller
             $data['password'] = Hash::make($request->password);
         }
 
-        DB::table('users')->where('id', $id)->update($data);
+        $user->update($data);
 
         return redirect()->route('admin.user.index')->with('success', 'User updated successfully');
     }
 
     public function create()
     {
-        $departemen = DB::table('departemen')->get();
-        $jabatan = DB::table('jabatan')->get();
-
-        return view('admin.user.create-user', compact('departemen', 'jabatan'));
+        $departemens = Departemen::all();
+        $jabatans = Jabatan::all();
+        return view('admin.user.create-user', compact('departemens', 'jabatans'));
     }
 
     public function store(Request $request)
@@ -125,7 +110,7 @@ class UserController extends Controller
             'role' => 'required|in:hrd,manager,pegawai',
         ]);
 
-        DB::table('users')->insert([
+        User::create([
             'nik' => $request->nik,
             'name' => $request->name,
             'email' => $request->email,
@@ -143,8 +128,12 @@ class UserController extends Controller
         return redirect()->route('admin.user.index')->with('success', 'User created successfully');
     }
 
-    public function export()
+    public function export(Request $request)
     {
-        return Excel::download(new UsersExport, 'data_karyawan.xlsx');
+        $departemenId = $request->input('departemen_id');
+        $departemen = $departemenId ? Departemen::find($departemenId) : null;
+        $filename = 'Data_Karyawan_' . ($departemen ? $departemen->nama . '_' : '') . now()->format('d-m-Y') . '.xlsx';
+        
+        return Excel::download(new UsersExport($departemenId), $filename);
     }
 }

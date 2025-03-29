@@ -22,7 +22,8 @@ class User extends Authenticatable
         'password',
         'role',
         'nik',
-        'tanggal_masuk',
+        'tanggal_masuk_kerja',
+        'tanggal_akhir_kerja', 
         'jumlah_cuti',
         'departemen_id',
         'jabatan_id',
@@ -48,6 +49,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'tanggal_masuk_kerja' => 'date',
+            'tanggal_akhir_kerja' => 'date'
         ];
     }
 

@@ -4,205 +4,72 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use App\Models\Cuti;
-use App\Models\JenisCuti;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-        $totalTerpakai = Cuti::where('id_user', $user->id)
-            ->where('status', 'Approved')
-            ->sum('jumlah');
-        $jumlahCuti = $user ? $user->jumlah_cuti : 'Data tidak tersedia';
-    
-        return view('users.dashboard', [
-            'jumlahCuti' => $jumlahCuti,
-            'totalTerpakai' => $totalTerpakai
-        ]);
-    }
-
-    public function pengajuanCuti()
-    {
-        $jenisCuti = JenisCuti::all();
-        return view('users.pengajuan', [
-            'jenisCuti' => $jenisCuti
-        ]);
-    }
-
-    public function ajukanCuti(Request $request)
-    {
-        $request->validate([
-            'jenis_cuti' => 'required|exists:jenis_cuti,id',
-            'tanggal_awal' => 'required|date',
-            'tanggal_akhir' => 'required|date|after_or_equal:tanggal_awal',
-        ]);
-
-        $tanggalAwal = Carbon::parse($request->tanggal_awal);
-        $tanggalAkhir = Carbon::parse($request->tanggal_akhir);
-        $jumlahHari = $tanggalAwal->diffInDays($tanggalAkhir) + 1;
-
-        $user = Auth::user();
-
-        if ($jumlahHari > $user->jumlah_cuti) {
-            return back()->with('error', 'Jumlah hari cuti melebihi sisa cuti Anda.');
-        }
-
-        // Kurangi jumlah cuti saat pengajuan
-        $user->jumlah_cuti -= $jumlahHari;
-        $user->save();
-
-        Cuti::create([
-            'id_user' => $user->id,
-            'jenis_cuti' => $request->jenis_cuti,
-            'tanggal_awal' => $tanggalAwal,
-            'tanggal_akhir' => $tanggalAkhir,
-            'jumlah' => $jumlahHari,
-            'status' => 'pending',
-        ]);
-
-        return redirect()->back()->with('success', 'Pengajuan cuti berhasil dikirim Cek History Untuk Lihat Hasil.');
-    }
-
-    public function riwayatCuti(Request $request)
-    {
-        $query = Auth::user()->cuti()->with('jenisCuti');
-
-        if ($request->has('sort') && in_array($request->sort, ['tanggal_awal', 'tanggal_akhir'])) {
-            $query->orderBy($request->sort, 'asc');
-        }
-
-        $riwayatCuti = $query->paginate(10);
-
-        return view('users.history', compact('riwayatCuti'));
-    }
-
-    public function adminCuti($status = 'pending')
-    {
-        $allowedStatuses = ['pending', 'approved_manager', 'approved_hrd', 'rejected_manager', 'rejected_hrd'];
-        $status = strtolower($status);
         
-        if (!in_array($status, $allowedStatuses)) {
-            // Map the status to the appropriate database values
-            if ($status === 'pending') {
-                $status = 'pending';
-            } elseif ($status === 'approved') {
-                if (auth()->user()->role === 'manager') {
-                    $status = 'approved_manager';
-                } else {
-                    $status = 'approved_hrd';
-                }
-            } elseif ($status === 'rejected') {
-                if (auth()->user()->role === 'manager') {
-                    $status = 'rejected_manager';
-                } else {
-                    $status = 'rejected_hrd';
-                }
-            } else {
-                abort(404);
-            }
-        }
-
-        $user = auth()->user();
-        $query = Cuti::with([
-            'user' => function ($query) {
-                $query->with('departemen');
-            },
-            'jenisCuti'
+        // Debug logging
+        Log::info('Dashboard user data', [
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'tanggal_akhir_kerja' => $user->tanggal_akhir_kerja,
+            'jumlah_cuti' => $user->jumlah_cuti
         ]);
 
-        // Filter based on user role and status
-        if ($user->role === 'manager') {
-            // For managers: only show cuti from their department
-            $query->whereHas('user', function($q) use ($user) {
-                $q->where('departemen_id', $user->departemen_id);
-            });
+        $totalTerpakai = Cuti::where('id_user', $user->id)
+            ->where(function($query) {
+                $query->where('status', 'pending')
+                      ->orWhere(function($q) {
+                          $q->where(function($inner) {
+                              $inner->where('status_manager', 'approved')
+                                   ->orWhere('status_hrd', 'approved');
+                          });
+                      });
+            })
+            ->sum('jumlah');
             
-            if ($status === 'pending') {
-                $query->where('status', 'pending');
-            } elseif ($status === 'approved' || $status === 'approved_manager') {
-                $query->where('status', 'approved_manager');
-            } elseif ($status === 'rejected' || $status === 'rejected_manager') {
-                $query->where('status', 'rejected_manager');
-            }
-        } elseif ($user->role === 'hrd') {
-            if ($status === 'pending') {
-                $query->where('status', 'approved_manager'); // HRD sees manager-approved as pending
-            } elseif ($status === 'approved' || $status === 'approved_hrd') {
-                $query->where('status', 'approved_hrd');
-            } elseif ($status === 'rejected' || $status === 'rejected_hrd') {
-                $query->where('status', 'rejected_hrd');
-            }
-        } else {
-            // For admin or other roles
-            if ($status === 'pending') {
-                $query->where('status', 'pending');
-            } elseif ($status === 'approved') {
-                $query->whereIn('status', ['approved_manager', 'approved_hrd']);
-            } elseif ($status === 'rejected') {
-                $query->whereIn('status', ['rejected_manager', 'rejected_hrd']);
-            }
-        }
+        $jumlahCuti = $user ? $user->jumlah_cuti : 'Data tidak tersedia';
+        $notification = null;
 
-        $daftarCuti = $query->paginate(10);
-
-        return view('admin.cuti.index', compact('daftarCuti', 'status'));
-    }
-
-    public function updateCuti(Request $request, $id)
-    {
-        $cuti = Cuti::findOrFail($id);
-        $action = $request->action;
-        $notes = $request->input('notes', null);
-        $user = auth()->user();
-
-        if ($action === 'reject' && !$notes) {
-            return redirect()->back()->with('error', 'Catatan harus diisi jika pengajuan ditolak.');
-        }
-
-        $employee = $cuti->user;
-
-        if ($action === 'approve') {
-            if ($cuti->status === 'pending') {
-                if ($user->role === 'manager') {
-                    $cuti->status = 'approved_manager';
-                    $cuti->notes_manager = null;
-                } elseif ($user->role === 'hrd') {
-                    $cuti->status = 'approved_hrd';
-                    $cuti->notes_hrd = null;
-                }
-            } elseif ($cuti->status === 'approved_manager' && $user->role === 'hrd') {
-                // HRD can approve manager-approved cuti
-                $cuti->status = 'approved_hrd';
-                $cuti->notes_hrd = null;
-            }
-        } elseif ($action === 'reject') {
-            if ($cuti->status === 'pending') {
-                // Kembalikan jumlah cuti jika ditolak
-                $employee->jumlah_cuti += $cuti->jumlah;
-                $employee->save();
+        if ($user && $user->tanggal_akhir_kerja) {
+            try {
+                $contractEndDate = Carbon::parse($user->tanggal_akhir_kerja);
+                $daysUntilEnd = now()->diffInDays($contractEndDate);
                 
-                if ($user->role === 'manager') {
-                    $cuti->status = 'rejected_manager';
-                    $cuti->notes_manager = $notes;
-                } elseif ($user->role === 'hrd') {
-                    $cuti->status = 'rejected_hrd';
-                    $cuti->notes_hrd = $notes;
+                // Debug logging
+                Log::info('Contract end calculation', [
+                    'contract_end_date' => $contractEndDate->format('Y-m-d'),
+                    'days_until_end' => $daysUntilEnd
+                ]);
+
+                // Show notification for 30 days before contract ends
+                if ($daysUntilEnd >= 0 && $daysUntilEnd <= 30) {
+                    if ($user->jumlah_cuti > 0) {
+                        $notification = [
+                            'type' => 'warning',
+                            'message' => "Kontrak Anda akan berakhir dalam " . floor($daysUntilEnd) . " hari. Anda masih memiliki {$user->jumlah_cuti} hari cuti yang belum digunakan."
+                        ];
+                        
+                        // Debug logging
+                        Log::info('Notification triggered', [
+                            'days_until_end' => floor($daysUntilEnd),
+                            'total_cuti' => $user->jumlah_cuti
+                        ]);
+                    }
                 }
-            } elseif ($cuti->status === 'approved_manager' && $user->role === 'hrd') {
-                // HRD can reject manager-approved cuti
-                $employee->jumlah_cuti += $cuti->jumlah;
-                $employee->save();
-                $cuti->status = 'rejected_hrd';
-                $cuti->notes_hrd = $notes;
+            } catch (\Exception $e) {
+                Log::error('Error calculating contract end date', [
+                    'error' => $e->getMessage()
+                ]);
             }
         }
-
-        $cuti->save();
-
-        return redirect()->back()->with('success', "Cuti berhasil di-{$action}.");
+    
+        return view('users.dashboard', compact('jumlahCuti', 'totalTerpakai', 'notification'));
     }
 }

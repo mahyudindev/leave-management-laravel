@@ -28,12 +28,11 @@
     @endif
 
     <div class="p-4 sm:ml-64">
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold text-black dark:text-white">Daftar Departemen</h1>
-            <a href="{{ route('admin.departemen.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Tambah Departemen</a>
+        <div class="mb-4">
+            <h1 class="text-2xl font-bold text-center text-black dark:text-white">Data Departemen</h1>
         </div>
 
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -48,11 +47,17 @@
                             <td class="px-6 py-4">{{ $loop->iteration }}</td>
                             <td class="px-6 py-4">{{ $dept->nama }}</td>
                             <td class="px-6 py-4 flex space-x-4">
-                                <a href="{{ route('admin.departemen.edit', $dept->id) }}" class="text-blue-500 hover:underline">Edit</a>
-                                <form action="{{ route('admin.departemen.destroy', $dept->id) }}" method="POST" onsubmit="return confirmDelete(event)">
+                                <a href="{{ route('admin.departemen.edit', $dept->id) }}" class="text-blue-500 hover:underline flex items-center">
+                                    <i class="fas fa-edit mr-1"></i>
+                                    Edit
+                                </a>
+                                <form action="{{ route('admin.departemen.destroy', $dept->id) }}" method="POST" onsubmit="return confirmDelete(event)" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:underline">Hapus</button>
+                                    <button type="submit" class="text-red-500 hover:underline flex items-center">
+                                        <i class="fas fa-trash mr-1"></i>
+                                        Hapus
+                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -67,6 +72,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
     <script>
         // SweetAlert delete confirmation
         function confirmDelete(event) {

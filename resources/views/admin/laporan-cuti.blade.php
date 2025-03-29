@@ -68,8 +68,8 @@
                             <td class="px-6 py-4">{{ $cuti->user->departemen->nama ?? '-' }}</td>
                             <td class="px-6 py-4">{{ $cuti->user->jabatan->nama ?? '-' }}</td>
                             <td class="px-6 py-4">{{ $cuti->jumlah }}</td>
-                            <td class="px-6 py-4">{{ $cuti->tanggal_awal }}</td>
-                            <td class="px-6 py-4">{{ $cuti->tanggal_akhir }}</td>
+                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($cuti->tanggal_awal)->format('d/m/Y') }}</td>
+                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($cuti->tanggal_akhir)->format('d/m/Y') }}</td>
                         </tr>
                     @empty
                         <tr>

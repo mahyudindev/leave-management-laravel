@@ -29,13 +29,33 @@
 
     <div class="p-4 sm:ml-64">
         <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-            <div class="relative flex space-x-2">
-                <input type="text" id="table-search-users" onkeyup="filterTable()"
-                    class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Cari Data Karyawan">
-                {{-- <a href="{{ route('admin.users.export') }}" class="px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600">
-                    Export Excel
-                </a> --}}
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" id="table-search-users" onkeyup="filterTable()"
+                        class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Cari Data Karyawan">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <select id="departemen-filter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">Semua Departemen</option>
+                        @foreach(App\Models\Departemen::all() as $departemen)
+                            <option value="{{ $departemen->id }}">{{ $departemen->nama }}</option>
+                        @endforeach
+                    </select>
+
+                    <button onclick="exportData()" class="flex items-center px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300">
+                        <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V4M7 14H5a1 1 0 0 0-1 1v4c0 .6.4 1 1 1h14c.6 0 1-.4 1-1v-4c0-.6-.4-1-1-1h-2m-1-5-4 5-4-5"/>
+                        </svg>
+                        Export Excel
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -124,6 +144,16 @@
             });
         }
 
+        // Export function
+        function exportData() {
+            const departemenId = document.getElementById('departemen-filter').value;
+            let url = '{{ route("admin.user.export") }}';
+            if (departemenId) {
+                url += '?departemen_id=' + departemenId;
+            }
+            window.location.href = url;
+        }
+
         // Sorting functionality for sortable headers
         document.querySelectorAll('.sortable').forEach(header => {
             header.addEventListener('click', function() {
@@ -144,9 +174,9 @@
 
                 // Update sort icon
                 if (order === 'asc') {
-                    sortIcon.setAttribute('d', 'M12 20l-6-6h12z'); // Arrow down
+                    sortIcon.innerHTML = '<path d="M12 20l-6-6h12z" />'; // Arrow down
                 } else {
-                    sortIcon.setAttribute('d', 'M12 4l6 6H6z'); // Arrow up
+                    sortIcon.innerHTML = '<path d="M12 4l6 6H6z" />'; // Arrow up
                 }
 
                 // Reorder table rows and update numbering
@@ -157,8 +187,7 @@
                 });
             });
         });
-    </script>
-    <script>
+
         // SweetAlert delete confirmation
         document.querySelectorAll('.delete-user-btn').forEach(button => {
             button.addEventListener('click', function() {
@@ -180,5 +209,4 @@
             });
         });
     </script>
-    
 </x-app-layout>

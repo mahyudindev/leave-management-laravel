@@ -10,12 +10,14 @@ return new class extends Migration
     {
         Schema::create('cuti', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('jenis_cuti_id')->constrained('jenis_cuti')->onDelete('cascade');
             $table->date('tanggal_awal');
             $table->date('tanggal_akhir');
             $table->integer('jumlah');
-            $table->foreignId('jenis_cuti')->constrained('jenis_cuti')->onDelete('cascade');
-            $table->enum('status', ['pending', 'approved_manager', 'rejected_manager', 'approved_hrd', 'rejected_hrd'])->default('pending');
+            $table->enum('status', ['Pending', 'Approved', 'Rejected'])->default('Pending');
+            $table->enum('status_manager', ['Pending', 'Approved', 'Rejected'])->default('Pending');
+            $table->enum('status_hrd', ['Pending', 'Approved', 'Rejected'])->default('Pending');
             $table->text('notes_manager')->nullable();
             $table->text('notes_hrd')->nullable();
             $table->timestamps();

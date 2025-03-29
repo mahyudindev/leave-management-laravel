@@ -19,9 +19,14 @@
                 <td>{{ $cuti->user->departemen->nama ?? '-' }}</td>
                 <td>{{ $cuti->user->jabatan->nama ?? '-' }}</td>
                 <td>{{ $cuti->jumlah }}</td>
-                <td>{{ $cuti->tanggal_awal }}</td>
-                <td>{{ $cuti->tanggal_akhir }}</td>
+                <td>{{ \Carbon\Carbon::parse($cuti->tanggal_awal)->format('d/m/Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($cuti->tanggal_akhir)->format('d/m/Y') }}</td>
             </tr>
         @endforeach
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="6" style="text-align: right; font-style: italic;">Dicetak pada: {{ \Carbon\Carbon::now()->format('d/m/Y') }}</td>
+        </tr>
+    </tfoot>
 </table>
