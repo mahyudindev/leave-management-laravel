@@ -16,10 +16,10 @@ class DatabaseSeeder extends Seeder
     {
         // Create departments and positions first
         $this->call([
+            DepartemenSeeder::class,
             UserSeeder::class,
             JabatanSeeder::class,
             JenisCuti::class,
-            
         ]);
     }
 }

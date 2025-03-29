@@ -79,7 +79,7 @@
                                     <td class="px-4 py-3 text-sm">{{ $cuti->user->nik }}</td>
                                     <td class="px-4 py-3 text-sm">{{ $cuti->user->name }}</td>
                                     <td class="px-4 py-3 text-sm">{{ $cuti->user->departemen->nama }}</td>
-                                    <td class="px-4 py-3 text-sm">{{ $cuti->jenisCuti->nama }}</td>
+                                    <td class="px-4 py-3 text-sm">{{ $cuti->jenisCuti->nama_cuti }}</td>
                                     <td class="px-4 py-3 text-sm">{{ \Carbon\Carbon::parse($cuti->tanggal_awal)->format('d-m-Y') }}</td>
                                     <td class="px-4 py-3 text-sm">{{ \Carbon\Carbon::parse($cuti->tanggal_akhir)->format('d-m-Y') }}</td>
                                     <td class="px-4 py-3 text-sm">{{ $cuti->jumlah }} Hari</td>
